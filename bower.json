@@ -11,5 +11,7 @@
     "tests"
   ],
   "dependencies": {
+    "stats.js": "*",
+    "three.js": "*"
   }
 }

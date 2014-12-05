@@ -17,6 +17,7 @@
 		"module": true,
 		"require": true,
 		"process": true,
-		"console": true
+		"console": true,
+		"THREE": true
 	}
 }
