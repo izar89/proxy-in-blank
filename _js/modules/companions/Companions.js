@@ -3,7 +3,6 @@ var Companion = require('./Companion');
 var server, companions, stage, self, socket;
 
 function Companions() {
-	console.log('[Companions] init');
 	_initSettings();
 	_initCanvas();
 	_createSelf();
@@ -35,12 +34,17 @@ function _addTrail(object) {
 	var trail = new createjs.Shape();
 
 	if (typeof object.xpast !== "undefined" || typeof object.ypast !== "undefined") {
-		trail.graphics.s("#fff").ss(1, "round").moveTo(object.xpast, object.ypast).quadraticCurveTo(object.xpast, object.ypast, object.x, object.y);
-		stage.addChild(trail);
+		trail.graphics.s("#E34B2A").ss(1, "round").quadraticCurveTo(object.xpast, object.ypast, object.x, object.y);
 		setInterval(function() {
 			trail.alpha -= 0.05;
+			if(trail.alpha < 0) {
+				stage.removeChild(trail);
+				object.xpast = object.x;
+				object.ypast = object.y;
+			}
 		}, 100);
 		object.trail.push(trail);
+		stage.addChild(trail);
 	}
 
 	if (object.trail.length > 15) {
@@ -50,10 +54,11 @@ function _addTrail(object) {
 	for (var i = 0; i < object.trail.length; i++) {
 		object.trail[i].alpha = (i / 100) * 15;
 	}
+
 	object.xpast = object.x;
 	object.ypast = object.y;
 
-	stage.addChild(trail);
+	stage.addChildAt(trail, 0);
 }
 
 function _removeTrail(trail) {
@@ -73,7 +78,6 @@ Companions.prototype.moveSelf = function(e) {
 };
 
 function _initSocket() {
-	console.log('[Companions] initSocket');
 	socket = io(server);
 	socket.addEventListener('add_companion', _addCompanion);
 	socket.addEventListener('move_companion', _moveCompanion);
@@ -81,7 +85,6 @@ function _initSocket() {
 }
 
 function _addCompanion(client) {
-	console.log('[Companions] addCompanion', client);
 	var companion = new Companion(client);
 	companions.push(companion);
 	stage.addChild(companion);
