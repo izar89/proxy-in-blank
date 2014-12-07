@@ -1,36 +1,46 @@
 (function(){
 
-	window.requestAnimationFrame = require('./modules/util/requestAnimationFrame');
-	var Scene = require('./modules/webgl/Scene');
+    window.requestAnimationFrame = require('./modules/util/requestAnimationFrame');
+    var Scene = require('./modules/webgl/Scene');
+    var Companions = require('./modules/companions/Companions');
 
-	var stats, scene;
+    var stats, scene, companions;
 
-	function init(){
-		stats = initStats();
-		scene = new Scene();
+    function init(){
+        stats = initStats();
+        scene = new Scene();
+        companions = new Companions();
 
-		update();
-	}
+        document.addEventListener('mousemove', companions.moveSelf);
+        window.addEventListener('resize', _resizeCanvas, false);
 
-	function initStats(){
-		stats = new Stats();
-  	stats.setMode(0);
-  	document.body.appendChild(stats.domElement);
+        update();
+    }
 
-  	stats.domElement.style.position = 'absolute';
-  	stats.domElement.style.top = '0px';
-  	stats.domElement.style.left = '0px';
+    function initStats(){
+        stats = new Stats();
+        stats.setMode(0);
+        document.body.appendChild(stats.domElement);
 
-  	return stats;
-	}
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        stats.domElement.style.left = '0px';
 
-	function update(){
-		stats.update();
-		scene.update(); //threejs scene
+        return stats;
+    }
 
-		requestAnimationFrame(update);
-	}
+    function update(){
+        stats.update();
+        scene.update(); //threejs scene
+        companions.update();
 
-	init();
+        requestAnimationFrame(update);
+    }
+
+    function _resizeCanvas() {
+        companions.resizeCanvas(window.innerWidth, window.innerHeight);
+    }
+
+    init();
 
 })();

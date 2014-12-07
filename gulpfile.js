@@ -9,6 +9,7 @@ var buffer = require('vinyl-buffer');
 var main_bower_files = require('main-bower-files');
 
 var config = require('./config.json');
+var package_json = require('./package.json');
 
 var plugins = require('gulp-load-plugins')({
 	pattern: ['gulp-*', 'gulp.*'],
@@ -21,6 +22,7 @@ function getFilePath(target,type){
 
 var scripts = [
 	"**/*.js",
+	package_json.main,
 	"!node_modules/**/*.js",
 	"!public/**/*.js",
 	"!js/**/*.js",
@@ -122,7 +124,7 @@ var nodemon_ignore = [
 ];
 
 gulp.task("server",function(){
-	plugins.nodemon({script: ".", ignore: nodemon_ignore});
+	plugins.nodemon({script: package_json.main, ignore: nodemon_ignore});
 });
 
 gulp.task('default', ['watch', 'stylesheets', 'hinting', 'scripts', 'vendor', 'server']);
