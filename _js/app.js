@@ -3,15 +3,17 @@
     window.requestAnimationFrame = require('./modules/util/requestAnimationFrame');
     var Scene = require('./modules/webgl/Scene');
     var Companions = require('./modules/companions/Companions');
+    var Triggers = require('./modules/audio/Triggers');
 
-    var stats, scene, companions;
+    var stats, scene, companions, triggers;
 
     function init(){
         stats = initStats();
         scene = new Scene();
         companions = new Companions();
+        triggers = new Triggers();
 
-        document.addEventListener('mousemove', companions.moveSelf);
+        document.addEventListener('mousemove', _triggerMovement);
         window.addEventListener('resize', _resizeCanvas, false);
 
         update();
@@ -35,6 +37,11 @@
         companions.update();
 
         requestAnimationFrame(update);
+    }
+
+    function _triggerMovement(e) {
+        triggers.hitTest(e);
+        companions.moveSelf(e);
     }
 
     function _resizeCanvas() {
