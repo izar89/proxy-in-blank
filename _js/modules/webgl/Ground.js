@@ -1,4 +1,3 @@
-var Util = require('../util/Util');
 var scene, groundMesh, groundMeshPositionX, groundMeshCopy, groundMeshCopyPositionX, noise = [], verticesWidth;
 
 function Ground(scene_){

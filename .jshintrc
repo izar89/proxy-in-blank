@@ -18,6 +18,7 @@
 		"require": true,
 		"process": true,
 		"console": true,
+		"Stats": true,
 		"THREE": true,
 		"createjs": true,
 		"_": true,

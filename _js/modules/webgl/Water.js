@@ -39,14 +39,14 @@ function addNoise(){
   }
 }
 
-function initWaterDebugMesh(){
-	var material = new THREE.MeshBasicMaterial({color: 0x000000, shading: THREE.FlatShading, wireframe: true, transparent: true });
-	var waterDebugMesh = new THREE.Mesh(waterMesh.geometry, material);
-  waterDebugMesh.rotation.x = - 1;
-  waterDebugMesh.position.y = waterDebugMesh.position.y +1;
-  waterDebugMesh.position.z = waterMesh.position.z;
-  scene.add(waterDebugMesh);
-}
+// function initWaterDebugMesh(){
+// 	var material = new THREE.MeshBasicMaterial({color: 0x000000, shading: THREE.FlatShading, wireframe: true, transparent: true });
+// 	var waterDebugMesh = new THREE.Mesh(waterMesh.geometry, material);
+//   waterDebugMesh.rotation.x = - 1;
+//   waterDebugMesh.position.y = waterDebugMesh.position.y +1;
+//   waterDebugMesh.position.z = waterMesh.position.z;
+//   scene.add(waterDebugMesh);
+// }
 
 
 Water.prototype.update = function(time){
