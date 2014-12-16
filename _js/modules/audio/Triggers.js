@@ -1,10 +1,13 @@
+/* globals AudioContext */
+
 var Util = require('../util/Util');
 var Trigger = require('../svg/Trigger');
 var BufferLoader = require('./BufferLoader');
 var Player = require('./Player');
 var sounds = require('../../data/sounds').sounds;
+var settings = require('../../data/settings');
 
-var bounds, triggers, svg, player, currentHit;
+var bounds, triggers, svg, player, socket;
 
 function Triggers() {
 	_initSettings();
@@ -29,24 +32,33 @@ function _initSettings() {
 
 function _createTriggers(buffer) {
 	for(var i = 0; i < buffer.length; i++) {
-		var trigger = new Trigger(Util.randomPosition(bounds), {width: 40, height: 40});
+		var trigger = new Trigger(Util.randomPosition(bounds), {width: 40, height: 40}, i);
 		trigger.sound = buffer[i];
 		trigger.panning = Util.getPanning(bounds, trigger.position.x);
 		trigger.volume = Util.getVolume(bounds, trigger.position.y);
+		trigger.element.addEventListener('mouseover', _triggerHandler, false);
 		svg.appendChild(trigger.element);
 		triggers.push(trigger);
 	}
+
+	_initSocket();
 }
 
-Triggers.prototype.hitTest = function(e) {
-	for(var i = 0; i < triggers.length; i++) {
-		if(Util.hitTest({x: e.pageX, y: e.pageY}, triggers[i].element.getBBox())) {
-			if(currentHit !== triggers[i]) {
-				currentHit = triggers[i];
-				player.play(currentHit);
-			}
-		}
-	}
-};
+function _triggerHandler(e) {
+	var curTrigger = triggers[e.currentTarget.getAttribute('trigger')];
+	player.play(curTrigger);
+
+	socket.emit('trigger_play', triggers.indexOf(curTrigger));
+}
+
+function _initSocket() {
+	socket = io(settings.server);
+	socket.addEventListener('trigger_played', _playSocketTrigger);
+}
+
+function _playSocketTrigger(trigger) {
+	console.log(trigger);
+	player.play(triggers[trigger]);
+}
 
 module.exports = Triggers;

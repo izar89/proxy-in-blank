@@ -40,7 +40,6 @@
     }
 
     function _triggerMovement(e) {
-        triggers.hitTest(e);
         companions.moveSelf(e);
     }
 

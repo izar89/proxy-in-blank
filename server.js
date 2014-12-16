@@ -44,6 +44,10 @@ io.on('connection', function(socket) {
 		});
 	});
 
+	socket.on('trigger_play', function(num) {
+		socket.broadcast.emit('trigger_played', num);
+	});
+
 	socket.on('disconnect', function() {
 		socket.broadcast.emit('remove_companion', client);
 		clients = _.filter(clients, function(client){
