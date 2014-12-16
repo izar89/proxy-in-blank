@@ -22,4 +22,25 @@ Util.hitTest = function(point, rect) {
     return (point.x > rect.x && point.x < (rect.x + rect.width) && point.y > rect.y && point.y < (rect.y + rect.height));
 };
 
+Util.getPanning = function(bounds, x) {
+    var range = bounds.width - (bounds.border * 2);
+    var half_range = range / 2;
+    x = x - bounds.border;
+    var panning = x / range;
+    if (panning < 0.5) {
+        panning = -(1 - (x / half_range));
+    } else if (panning === 0.5) {
+        panning = 0;
+    } else {
+        panning = (x - half_range) / half_range;
+    }
+    return panning;
+};
+
+Util.getVolume = function(bounds, y) {
+    var range = bounds.height - (bounds.border * 2);
+    y = y - bounds.border;
+    return 1 - (y / range);
+};
+
 module.exports = Util;

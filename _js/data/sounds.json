@@ -1,0 +1,14 @@
+{
+    "sounds": [
+	    {
+	        "name": "SD",
+	        "file": "sound/sd.wav"
+	    }, {
+	        "name": "HH",
+	        "file": "sound/hh.wav"
+	    }, {
+	        "name": "BD",
+	        "file": "sound/bd.wav"
+	    }
+    ]
+}
