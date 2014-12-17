@@ -71,8 +71,8 @@ Companions.prototype.moveSelf = function(e) {
 	self.x = e.pageX;
 	self.y = e.pageY;
 	socket.emit('update_position', {
-		x: e.pageX,
-		y: e.pageY
+		x: self.x,
+		y: self.y
 	});
 	_addTrail(self);
 };

@@ -57,7 +57,6 @@ function _initSocket() {
 }
 
 function _playSocketTrigger(trigger) {
-	console.log(trigger);
 	player.play(triggers[trigger]);
 }
 

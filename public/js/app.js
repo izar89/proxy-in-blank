@@ -53,11 +53,11 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json":[function(require,module,exports){
-module.exports={
-	"server": "https://calm-oasis-6526.herokuapp.com"
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+	"server": "http://localhost:3000" // https://calm-oasis-6526.herokuapp.com
 }
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
     "sounds": [
 	    {
 	        "name": "SD",
@@ -205,7 +205,6 @@ function _initSocket() {
 }
 
 function _playSocketTrigger(trigger) {
-	console.log(trigger);
 	player.play(triggers[trigger]);
 }
 
@@ -213,9 +212,10 @@ module.exports = Triggers;
 },{"../../data/settings":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json","../../data/sounds":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json","../svg/Trigger":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Trigger.js","../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js","./BufferLoader":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/BufferLoader.js","./Player":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Player.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companion.js":[function(require,module,exports){
 function Companion(client) {
 	var companion = new createjs.Shape();
-	companion.graphics.f('#e39c8d').dc(client.x, client.y, 20);
-
-	if(client.id) {
+	companion.graphics.f('#e39c8d').dc(0, 0, 20);
+	companion.x = client.x;
+	companion.y = client.y;
+	if(client.id !== false) {
 		companion.clientid = client.id;
 	}
 	companion.trail = [];
@@ -297,8 +297,8 @@ Companions.prototype.moveSelf = function(e) {
 	self.x = e.pageX;
 	self.y = e.pageY;
 	socket.emit('update_position', {
-		x: e.pageX,
-		y: e.pageY
+		x: self.x,
+		y: self.y
 	});
 	_addTrail(self);
 };
