@@ -53,6 +53,6 @@ sftp-config.json
 bower_components
 
 ### Browserify ###
-public/vendor
-public/css
-public/js
+#public/vendor
+#public/css
+#public/js
