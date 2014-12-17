@@ -18,7 +18,7 @@ function _initCanvas() {
 	var canvas = document.createElement('canvas');
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-	document.querySelector('.container').insertBefore(canvas, document.querySelector('svg'));
+	document.querySelector('.container').appendChild(canvas);
 
 	stage = new createjs.Stage(canvas);
 }
