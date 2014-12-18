@@ -54,11 +54,11 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
-	"server": "http://localhost:3000" // https://calm-oasis-6526.herokuapp.com
+module.exports={
+	"server": "https://calm-oasis-6526.herokuapp.com" // https://calm-oasis-6526.herokuapp.com
 }
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
