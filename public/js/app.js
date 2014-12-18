@@ -16,8 +16,6 @@
 
         document.addEventListener('mousemove', _triggerMovement);
         window.addEventListener('resize', _resizeCanvas, false);
-        window.addEventListener('focus', _focusHandler, false);
-        window.addEventListener('blur', _blurHandler, false);
 
         update();
     }
@@ -43,14 +41,6 @@
         requestAnimationFrame(update);
     }
 
-    function _focusHandler() {
-        triggers.play();
-    }
-
-    function _blurHandler() {
-        triggers.pause();
-    }
-
     function _triggerMovement(e) {
         companions.moveSelf(e);
     }
@@ -64,11 +54,11 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
 	"server": "http://localhost:3000" // https://calm-oasis-6526.herokuapp.com
 }
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -236,107 +226,82 @@ var settings = require('../../data/settings');
 var bounds, triggers, svg, player, socket, buffer, min_duration, max_duration, currentTime;
 
 function Triggers() {
-    _initSettings();
+	_initSettings();
 }
 
 function _initSettings() {
-    bounds = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        border: 40
-    };
+	bounds = {
+		width: window.innerWidth,
+		height: window.innerHeight,
+		border: 40
+	};
 
-    svg = document.querySelector('svg');
-    triggers = [];
+	svg = document.querySelector('svg');
+	triggers = [];
 
-    var context = new AudioContext();
-    player = new Player(context);
+	var context = new AudioContext();
+	player = new Player(context);
 
-    min_duration = 30000;
-    max_duration = 42000;
+	min_duration = 18000;
+	max_duration = 20000;
 
-    var loader = new BufferLoader(context, sounds, _initSocket);
-    loader.load();
+	var loader = new BufferLoader(context, sounds, _initSocket);
+	loader.load();
 }
 
 function _initSocket(b) {
-    buffer = b;
-    socket = io(settings.server);
-    socket.addEventListener('add_trigger', _addTrigger);
-    socket.addEventListener('trigger_played', _playSocketTrigger);
+	buffer = b;
+	socket = io(settings.server);
+	socket.addEventListener('add_trigger', _addTrigger);
+	socket.addEventListener('trigger_played', _playSocketTrigger);
 }
 
 function _addTrigger(t) {
-    var trigger = new Trigger(t);
-    trigger.sound = buffer[(t.sound.id - 1)];
-    trigger.panning = Util.getPanning(bounds, trigger.position.x);
-    trigger.volume = Util.getVolume(bounds, trigger.position.y);
-    trigger.element.addEventListener('mouseover', _triggerHandler, false);
-    svg.appendChild(trigger.element);
-    triggers.push(trigger);
+	var trigger = new Trigger(t);
+	trigger.sound = buffer[(t.sound.id - 1)];
+	trigger.panning = Util.getPanning(bounds, trigger.position.x);
+	trigger.volume = Util.getVolume(bounds, trigger.position.y);
+	trigger.element.addEventListener('mouseover', _triggerHandler, false);
+	svg.appendChild(trigger.element);
+	triggers.push(trigger);
 
+	trigger.element.setAttribute('trigger', triggers.indexOf(trigger));
+	setTimeout(function() {
+		svg.removeChild(trigger.element);
+		triggers = _.reject(triggers, trigger);
+	}, 30000);
 
-        trigger.element.setAttribute('trigger', triggers.indexOf(trigger));
-    setTimeout(function() {
-    	svg.removeChild(trigger.element);
-    	triggers = _.reject(triggers, trigger);
-    }, 30000);
+	var duration = max_duration + t.sound.id / sounds.length * (min_duration - max_duration);
+	var player = trigger.moveTrigger(duration);
 
-
-/*    var duration = max_duration + t.sound.id / sounds.length * (min_duration - max_duration);
-    var player = trigger.element.animate([{
-        transform: 'translate(0px, ' + trigger.position.y + 'px)'
-    }], {
-        duration: duration,
-        iterations: Infinity
-    });
-
-    player.onfinish = function(e) {
-        console.log('per aspera ad terra!');
-    };*/
+	player.onfinish = function(e) {
+		console.log('per aspera ad terra!');
+	};
 }
 
 function _triggerHandler(e) {
-    var curTrigger = _.findWhere(triggers, {
-        'timestamp': parseInt(e.currentTarget.getAttribute('timestamp'))
-    });
-    player.play(curTrigger);
+	var curTrigger = _.findWhere(triggers, {
+		'timestamp': parseInt(e.currentTarget.getAttribute('timestamp'))
+	});
+	player.play(curTrigger);
 
-    socket.emit('play_trigger', curTrigger.timestamp);
+	socket.emit('play_trigger', curTrigger.timestamp);
 }
 
 function _playSocketTrigger(timestamp) {
-    var curTrigger = _.findWhere(triggers, {
-        'timestamp': timestamp
-    });
-    if (curTrigger) {
-        player.play(curTrigger);
-    }
+	var curTrigger = _.findWhere(triggers, {
+		'timestamp': timestamp
+	});
+	if (curTrigger) {
+		player.play(curTrigger);
+	}
 }
 
 Triggers.prototype.update = function() {
-	for(var i = 0; i < triggers.length; i++) {
-		var curTrigger = triggers[i];
-		curTrigger.moveTrigger(curTrigger.position.x - 1, curTrigger.position.y);
-		curTrigger.panning = Util.getPanning(bounds, curTrigger.position.x);
-	}
-};
-
-Triggers.prototype.play = function() {
-	if(currentTime) {
-		var diff = Math.round((parseInt(Date.now()) - currentTime) / 60);
-		console.log(diff);
-		for(var i = 0; i < triggers.length; i++) {
-			var curTrigger = triggers[i];
-			curTrigger.moveTrigger(curTrigger.position.x - diff, curTrigger.position.y);
-			curTrigger.panning = Util.getPanning(bounds, curTrigger.position.x);
-		}
-	}
-	currentTime = 0;
-};
-
-Triggers.prototype.pause = function() {
-	currentTime = Date.now();
+    for (var i = 0; i < triggers.length; i++) {
+    	var curTrigger = triggers[i];
+    	curTrigger.panning = Util.getPanning(bounds, curTrigger.element.getBoundingClientRect().left);
+    }
 };
 
 module.exports = Triggers;
@@ -494,7 +459,6 @@ var Util = require('../util/Util');
 
 function Trigger(trigger) {
 	this.position = trigger.position || {x: 0, y: 0};
-	this.position.x += window.innerWidth;
 	this.size = {width: 40, height: 40};
 	this.fill = Util.randomHsla(); // random nice/bright color
 	this.timestamp = trigger.timestamp;
@@ -512,11 +476,16 @@ function _create() {
 	this.element.setAttribute('timestamp', this.timestamp);
 }
 
-Trigger.prototype.moveTrigger = function(x, y) {
-	this.position.x = x;
-	this.position.y = y;
-	this.element.setAttribute('x', x);
-	this.element.setAttribute('y', y);
+Trigger.prototype.moveTrigger = function(duration) {
+    var player = this.element.animate([{
+        transform: 'translateX(' + (this.position.x + window.innerWidth )+ 'px)'
+    }, {
+        transform: 'translateX(' + (this.position.x - 300) + 'px)'
+    }], {
+        duration: duration
+    });
+
+    return player;
 };
 
 module.exports = Trigger;

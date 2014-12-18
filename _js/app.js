@@ -15,8 +15,6 @@
 
         document.addEventListener('mousemove', _triggerMovement);
         window.addEventListener('resize', _resizeCanvas, false);
-        window.addEventListener('focus', _focusHandler, false);
-        window.addEventListener('blur', _blurHandler, false);
 
         update();
     }
@@ -40,14 +38,6 @@
         triggers.update();
 
         requestAnimationFrame(update);
-    }
-
-    function _focusHandler() {
-        triggers.play();
-    }
-
-    function _blurHandler() {
-        triggers.pause();
     }
 
     function _triggerMovement(e) {
