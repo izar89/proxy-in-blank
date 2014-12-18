@@ -4,58 +4,84 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var _ = require('underscore');
 var Client = require('./classes/Client.js');
+var sounds = require('./_js/data/sounds').sounds;
 
 /** CONFIG **/
 require("./config/middleware.js")(app, express);
 
 var port = process.env.PORT;
 var clients = [];
+var bounds = {
+    width: 200,
+    height: 800,
+    border: 40
+};
+
+function randomPosition(bounds) {
+    return {
+        x: Math.round(Math.random() * (bounds.width - (bounds.border * 2))),
+        y: bounds.border + Math.round(Math.random() * (bounds.height - (bounds.border * 2)))
+    };
+}
+
+setInterval(function() {
+    var trigger = {
+    	timestamp: Date.now(),
+        sound: _.sample(sounds),
+        position: randomPosition(bounds)
+    };
+    io.emit('add_trigger', trigger);
+}, 1200);
 
 io.on('connection', function(socket) {
-	var max_id = 0;
+    var max_id = 0;
 
-	if(clients.length > 0){
-		max_id = _.max(clients, function(client){
-			return client.id;
-		}).id;
-	} else {
-		max_id = -1;
-	}
+    if (clients.length > 0) {
+        max_id = _.max(clients, function(client) {
+            return client.id;
+        }).id;
+    } else {
+        max_id = -1;
+    }
 
-	var client = new Client(max_id + 1, socket.id);
-	clients.push(client);
+    var client = new Client(max_id + 1, socket.id);
+    clients.push(client);
 
-	_.each(clients, function(c) {
-		if(c !== client) {
-			socket.emit('add_companion', c);
-		}
-	});
+    _.each(clients, function(c) {
+        if (c !== client) {
+            socket.emit('add_companion', c);
+        }
+    });
 
-	socket.broadcast.emit('add_companion', client);
+    socket.broadcast.emit('add_companion', client);
 
-	socket.on('update_position', function(coords) {
-		_.findWhere(clients, {socketid: socket.id}).x = coords.x;
-		_.findWhere(clients, {socketid: socket.id}).y = coords.y;
+    socket.on('update_position', function(coords) {
+        _.findWhere(clients, {
+            socketid: socket.id
+        }).x = coords.x;
+        _.findWhere(clients, {
+            socketid: socket.id
+        }).y = coords.y;
 
-		socket.broadcast.emit('move_companion', {
-			id: client.id,
-			x: coords.x,
-			y: coords.y
-		});
-	});
+        socket.broadcast.emit('move_companion', {
+            id: client.id,
+            x: coords.x,
+            y: coords.y
+        });
+    });
 
-	socket.on('trigger_play', function(num) {
-		socket.broadcast.emit('trigger_played', num);
-	});
+    socket.on('play_trigger', function(timestamp) {
+        socket.broadcast.emit('trigger_played', timestamp);
+    });
 
-	socket.on('disconnect', function() {
-		socket.broadcast.emit('remove_companion', client);
-		clients = _.filter(clients, function(client){
-			return client.socketid !== socket.id;
-		});
-	});
+    socket.on('disconnect', function() {
+        socket.broadcast.emit('remove_companion', client);
+        clients = _.filter(clients, function(client) {
+            return client.socketid !== socket.id;
+        });
+    });
 });
 
 server.listen(port, function() {
-	console.log('Server listening at port ' + port);
+    console.log('Server listening at port ' + port);
 });

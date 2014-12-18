@@ -44,7 +44,8 @@ html {
   box-sizing: inherit; }
 
 canvas {
-  cursor: none; }
+  cursor: none;
+  position: absolute; }
 
 html, body {
   height: 100%;
@@ -55,9 +56,6 @@ html, body {
   height: 100%;
   position: relative;
   overflow: hidden; }
-
-canvas {
-  position: absolute; }
 
 svg {
   position: absolute;

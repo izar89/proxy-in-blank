@@ -36,6 +36,7 @@
         stats.update();
         scene.update(); //threejs scene
         companions.update();
+        triggers.update();
 
         requestAnimationFrame(update);
     }
@@ -53,23 +54,90 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json":[function(require,module,exports){
-module.exports={
-	"server": "https://calm-oasis-6526.herokuapp.com" // https://calm-oasis-6526.herokuapp.com
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+	"server": "http://localhost:3000" // https://calm-oasis-6526.herokuapp.com
 }
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports={
-    "sounds": [
-	    {
-	        "name": "SD",
-	        "file": "sound/sd.wav"
-	    }, {
-	        "name": "HH",
-	        "file": "sound/hh.wav"
-	    }, {
-	        "name": "BD",
-	        "file": "sound/bd.wav"
-	    }
-    ]
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+    "sounds": [{
+        "id": 1,
+        "file": "sounds/1.mp3"
+    }, {
+        "id": 2,
+        "file": "sounds/2.mp3"
+    }, {
+        "id": 3,
+        "file": "sounds/3.mp3"
+    }, {
+        "id": 4,
+        "file": "sounds/4.mp3"
+    }, {
+        "id": 5,
+        "file": "sounds/5.mp3"
+    }, {
+        "id": 6,
+        "file": "sounds/6.mp3"
+    }, {
+        "id": 7,
+        "file": "sounds/7.mp3"
+    }, {
+        "id": 8,
+        "file": "sounds/8.mp3"
+    }, {
+        "id": 9,
+        "file": "sounds/9.mp3"
+    }, {
+        "id": 10,
+        "file": "sounds/10.mp3"
+    }, {
+        "id": 11,
+        "file": "sounds/11.mp3"
+    }, {
+        "id": 12,
+        "file": "sounds/12.mp3"
+    }, {
+        "id": 13,
+        "file": "sounds/13.mp3"
+    }, {
+        "id": 14,
+        "file": "sounds/14.mp3"
+    }, {
+        "id": 15,
+        "file": "sounds/15.mp3"
+    }, {
+        "id": 16,
+        "file": "sounds/16.mp3"
+    }, {
+        "id": 17,
+        "file": "sounds/17.mp3"
+    }, {
+        "id": 18,
+        "file": "sounds/18.mp3"
+    }, {
+        "id": 19,
+        "file": "sounds/19.mp3"
+    }, {
+        "id": 20,
+        "file": "sounds/20.mp3"
+    }, {
+        "id": 21,
+        "file": "sounds/21.mp3"
+    }, {
+        "id": 22,
+        "file": "sounds/22.mp3"
+    }, {
+        "id": 23,
+        "file": "sounds/23.mp3"
+    }, {
+        "id": 24,
+        "file": "sounds/24.mp3"
+    }, {
+        "id": 25,
+        "file": "sounds/25.mp3"
+    }, {
+        "id": 26,
+        "file": "sounds/26.mp3"
+    }]
 }
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/BufferLoader.js":[function(require,module,exports){
 function BufferLoader(context, urlList, callback) {
@@ -155,7 +223,7 @@ var Player = require('./Player');
 var sounds = require('../../data/sounds').sounds;
 var settings = require('../../data/settings');
 
-var bounds, triggers, svg, player, socket;
+var bounds, triggers, svg, player, socket, buffer;
 
 function Triggers() {
 	_initSettings();
@@ -174,39 +242,50 @@ function _initSettings() {
 	var context = new AudioContext();
 	player = new Player(context);
 
-	var loader = new BufferLoader(context, sounds, _createTriggers);
+	var loader = new BufferLoader(context, sounds, _initSocket);
 	loader.load();
 }
 
-function _createTriggers(buffer) {
-	for(var i = 0; i < buffer.length; i++) {
-		var trigger = new Trigger(Util.randomPosition(bounds), {width: 40, height: 40}, i);
-		trigger.sound = buffer[i];
-		trigger.panning = Util.getPanning(bounds, trigger.position.x);
-		trigger.volume = Util.getVolume(bounds, trigger.position.y);
-		trigger.element.addEventListener('mouseover', _triggerHandler, false);
-		svg.appendChild(trigger.element);
-		triggers.push(trigger);
-	}
-
-	_initSocket();
-}
-
-function _triggerHandler(e) {
-	var curTrigger = triggers[e.currentTarget.getAttribute('trigger')];
-	player.play(curTrigger);
-
-	socket.emit('trigger_play', triggers.indexOf(curTrigger));
-}
-
-function _initSocket() {
+function _initSocket(b) {
+	buffer = b;
 	socket = io(settings.server);
+	socket.addEventListener('add_trigger', _addTrigger);
 	socket.addEventListener('trigger_played', _playSocketTrigger);
 }
 
-function _playSocketTrigger(trigger) {
-	player.play(triggers[trigger]);
+function _addTrigger(t) {
+	var trigger = new Trigger(t);
+	trigger.sound = buffer[(t.sound.id - 1)];
+	trigger.panning = Util.getPanning(bounds, trigger.position.x);
+	trigger.volume = Util.getVolume(bounds, trigger.position.y);
+	trigger.element.addEventListener('mouseover', _triggerHandler, false);
+	svg.appendChild(trigger.element);
+	triggers.push(trigger);
+	trigger.element.setAttribute('trigger', triggers.indexOf(trigger));
 }
+
+function _triggerHandler(e) {
+	var curTrigger = _.findWhere(triggers, {'timestamp': parseInt(e.currentTarget.getAttribute('timestamp'))});
+	player.play(curTrigger);
+
+	socket.emit('play_trigger', curTrigger.timestamp);
+}
+
+function _playSocketTrigger(timestamp) {
+	var curTrigger = _.findWhere(triggers, {'timestamp': timestamp});
+	console.log(timestamp, curTrigger);
+	if(curTrigger) {
+		player.play(curTrigger);
+	}
+}
+
+Triggers.prototype.update = function() {
+	for(var i = 0; i < triggers.length; i++) {
+		var curTrigger = triggers[i];
+		curTrigger.moveTrigger(curTrigger.position.x - 1, curTrigger.position.y);
+		curTrigger.panning = Util.getPanning(bounds, curTrigger.position.x);
+	}
+};
 
 module.exports = Triggers;
 },{"../../data/settings":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json","../../data/sounds":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json","../svg/Trigger":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Trigger.js","../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js","./BufferLoader":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/BufferLoader.js","./Player":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Player.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companion.js":[function(require,module,exports){
@@ -361,11 +440,12 @@ module.exports = SVGHelper;
 var SVGHelper = require('./SVGHelper');
 var Util = require('../util/Util');
 
-function Trigger(position, size, triggerRef) {
-	this.position = position || {x: 0, y: 0};
-	this.size = size || {width: 40, height: 40};
+function Trigger(trigger) {
+	this.position = trigger.position || {x: 0, y: 0};
+	this.position.x += window.innerWidth;
+	this.size = {width: 40, height: 40};
 	this.fill = Util.randomHsla(); // random nice/bright color
-	this.triggerRef = triggerRef;
+	this.timestamp = trigger.timestamp;
 
 	_create.call(this);
 }
@@ -377,11 +457,17 @@ function _create() {
 	this.element.setAttribute('width', this.size.width);
 	this.element.setAttribute('height', this.size.height);
 	this.element.setAttribute('fill', this.fill);
-	this.element.setAttribute('trigger', this.triggerRef);
+	this.element.setAttribute('timestamp', this.timestamp);
 }
 
-module.exports = Trigger;
+Trigger.prototype.moveTrigger = function(x, y) {
+	this.position.x = x;
+	this.position.y = y;
+	this.element.setAttribute('x', x);
+	this.element.setAttribute('y', y);
+};
 
+module.exports = Trigger;
 },{"../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js","./SVGHelper":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js":[function(require,module,exports){
 function Util() {
 

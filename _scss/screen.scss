@@ -2,6 +2,7 @@
 
 canvas {
 	cursor: none;
+	position: absolute;
 }
 
 html,
@@ -15,10 +16,6 @@ body {
 	height: 100%;
 	position: relative;
 	overflow: hidden;
-}
-
-canvas {
-	position: absolute;
 }
 
 svg {
