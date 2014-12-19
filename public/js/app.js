@@ -54,8 +54,13 @@
 
 })();
 
+<<<<<<< HEAD
 },{"./modules/audio/Triggers":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/webgl/Scene.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/data/sounds.json":[function(require,module,exports){
 module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+=======
+},{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
+module.exports=module.exports={
+>>>>>>> ee0f4cea962bcab3de4abc120fd173b38cfb2cf8
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -420,41 +425,76 @@ module.exports = Companions;
 },{"../svg/Companion":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/svg/Companion.js","../svg/SVGHelper":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/svg/SVGHelper.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/soundcloud/SoundCloud.js":[function(require,module,exports){
 /* globals SC */
 
-function SoundCloud(){
+var result, currentTracks, socket;
+
+function SoundCloud() {
 	initClient();
+	initSocket();
 	initSoundbar();
 }
 
-function initClient(){
+function initClient() {
 	SC.initialize({
-  	client_id: 'bd3361bf40be90ef0b5bdf94c008674c',
-  	redirect_uri: ''
+		client_id: 'bd3361bf40be90ef0b5bdf94c008674c',
+		redirect_uri: ''
 	});
 }
 
-function initSoundbar(){
-	var searchInput = document.querySelector('#soundbar-search input');
-	searchInput.addEventListener('blur', keyDownHandler);
-	searchInput.addEventListener('onkeydown', keyDownHandler);
+function initSocket() {
+	socket = io('/');
 }
 
-function keyDownHandler(e){
-	console.log(e.keyCode);
-	if(e.keyCode === 13 || this.value.length > 3){
+function initSoundbar() {
+	var searchInput = document.querySelector('#soundbar-search input');
+	searchInput.addEventListener('keyup', keyUpHandler);
+
+	result = document.querySelector('#search-results');
+}
+
+function keyUpHandler(e) {
+	if (e.keyCode === 13 || this.value.length >= 3) {
 		searchSong(this.value);
-		console.log('search');
 	}
 }
 
-function searchSong(value){
-	SC.get('/tracks', {q: value}, function(tracks) {
-  	console.log(tracks);
+function searchSong(value) {
+	SC.get('/tracks', {
+		q: value,
+		limit: 5
+	}, function(tracks, error) {
+		showTracks(tracks);
 	});
 }
 
-module.exports = SoundCloud;
+function showTracks(tracks) {
+	result.innerHTML = '';
+	currentTracks = [];
+	if(tracks.length > 0) {
+		for (var i = 0; i < tracks.length; i++) {
+			var li = document.createElement('li');
+			li.innerHTML = tracks[i].title + '<br />' + tracks[i].user.username;
+			li.addEventListener('click', selectTrackHandler, false);
+			result.appendChild(li);
+			currentTracks.push(tracks[i]);
+			li.setAttribute('data-id', i);
+		}
+	} else {
+		result.innerHTML = '<li>Couldn\'t find any matching tracks :(</li>';
+	}
+}
 
+<<<<<<< HEAD
 },{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy/_js/modules/svg/Companion.js":[function(require,module,exports){
+=======
+function selectTrackHandler(e) {
+	console.log(e.currentTarget.getAttribute('data-id'));
+	var curTrack = currentTracks[e.currentTarget.getAttribute('data-id')];
+	socket.emit('selected_track', curTrack);
+}
+
+module.exports = SoundCloud;
+},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Companion.js":[function(require,module,exports){
+>>>>>>> ee0f4cea962bcab3de4abc120fd173b38cfb2cf8
 /* globals d3 */
 
 var SVGHelper = require('./SVGHelper');

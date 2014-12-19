@@ -4,6 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var _ = require('underscore');
 var Client = require('./classes/Client.js');
+var Track = require('./classes/Track.js');
 var sounds = require('./_js/data/sounds').sounds;
 var Util = require('./_js/modules/util/Util');
 
@@ -12,6 +13,8 @@ require("./config/middleware.js")(app, express);
 
 var port = process.env.PORT;
 var clients = [];
+var tracks = [];
+var currentTrack = {};
 var bounds = {
     width: 200,
     height: 800,
@@ -27,6 +30,10 @@ setInterval(function() {
     io.emit('add_trigger', trigger);
 }, 1200);
 
+setInterval(function() {
+    currentTrack.position++;
+}, 1000);
+
 io.on('connection', function(socket) {
     var max_id = 0;
 
@@ -41,6 +48,7 @@ io.on('connection', function(socket) {
     var client = new Client(max_id + 1, socket.id);
     clients.push(client);
     socket.emit('self', client);
+    socket.emit('currentTrack', currentTrack);
 
     _.each(clients, function(c) {
         if (c !== client) {
@@ -67,6 +75,13 @@ io.on('connection', function(socket) {
 
     socket.on('play_trigger', function(timestamp) {
         socket.broadcast.emit('trigger_played', timestamp);
+    });
+
+    socket.on('selected_track', function(track) {
+        if(client.track.length === 0) {
+            var t = new Track(track);
+            tracks.push(t);
+        }
     });
 
     socket.on('disconnect', function() {
