@@ -1,11 +1,12 @@
 @import 'base';
 
 * {
-	cursor: none;
+	outline: none;
 }
 
-canvas {
+canvas, svg {
 	position: absolute;
+	cursor: none;
 }
 
 html,
@@ -21,15 +22,9 @@ body {
 	overflow: hidden;
 }
 
-#triggers, #companions {
-	position: absolute;
+svg {
 	top: 0;
 	left: 0;
-	z-index: 4;
-}
-
-#companions {
-	pointer-events: all;
 	z-index: 5;
 }
 
@@ -37,20 +32,27 @@ body {
 	position: fixed;
 	bottom: 0;
 	z-index: 999;
-	height: 50px;
+	height: 80px;
 	width: 100%;
-	background-color: #fff;
-	opacity: 0.9;
+	background-color: #323440;
+	border-top: 4px solid #ebac59;
+	opacity: .7;
+	transition: opacity .3s;
 
-	#soundbar-search input {
-		margin: 5px;
-		border: solid 4px #c9c9c9;
-		padding: 10px;
+	#soundbar-search {
+		padding: 5px;
 		width: 300px;
-		transition: border 0.3s;
 
-		&:focus {
-			border: solid 4px #969696;
+		input {
+			width: 100%;
+			height: 100%;
+			padding: 10px;
+			border: 0;
+			box-sizing: border-box;
 		}
+	}
+
+	&:hover {
+		opacity: 1;
 	}
 }
