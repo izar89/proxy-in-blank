@@ -44,10 +44,11 @@ html {
   box-sizing: inherit; }
 
 * {
-  cursor: none; }
+  outline: none; }
 
-canvas {
-  position: absolute; }
+canvas, svg {
+  position: absolute;
+  cursor: none; }
 
 html, body {
   height: 100%;
@@ -59,29 +60,61 @@ html, body {
   position: relative;
   overflow: hidden; }
 
-#triggers, #companions {
-  position: absolute;
+svg {
   top: 0;
   left: 0;
-  z-index: 4; }
-
-#companions {
-  pointer-events: all;
   z-index: 5; }
 
 #soundbar {
   position: fixed;
   bottom: 0;
   z-index: 999;
-  height: 50px;
+  height: 80px;
   width: 100%;
-  background-color: #fff;
-  opacity: 0.9; }
-  #soundbar #soundbar-search input {
-    margin: 5px;
-    border: solid 4px #c9c9c9;
-    padding: 10px;
+  background-color: #323440;
+  border-top: 4px solid #ebac59;
+  opacity: 0.7;
+  transition: opacity 0.3s; }
+  #soundbar:hover #search-results {
+    opacity: 1; }
+  #soundbar #search-results {
+    background-color: #ffcc8a;
     width: 300px;
-    transition: border 0.3s; }
-    #soundbar #soundbar-search input:focus {
-      border: solid 4px #969696; }
+    position: absolute;
+    bottom: 80px;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s; }
+    #soundbar #search-results li {
+      color: #323440;
+      font-family: Montserrat, sans-serif;
+      padding: 10px 0;
+      border-bottom: 1px solid #ebac59;
+      cursor: pointer; }
+      #soundbar #search-results li:first-line {
+        font-size: 120%; }
+      #soundbar #search-results li:hover {
+        color: #fff; }
+  #soundbar #soundbar-search {
+    padding: 0 5px;
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+    position: absolute; }
+    #soundbar #soundbar-search input {
+      background-color: transparent;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      border: 0;
+      box-sizing: border-box;
+      font-family: Montserrat, sans-serif;
+      font-size: 34px;
+      color: #FFF;
+      position: absolute; }
+  #soundbar #sc {
+    position: absolute;
+    right: 5px;
+    padding: 20px 10px; }
+  #soundbar:hover {
+    opacity: 1; }
