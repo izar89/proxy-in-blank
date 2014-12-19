@@ -9,7 +9,6 @@
     var stats, scene, companions, triggers, soundcloud;
 
     function init(){
-        stats = initStats();
         scene = new Scene();
         triggers = new Triggers();
         companions = new Companions();
@@ -32,20 +31,7 @@
         };
     }
 
-    function initStats(){
-        stats = new Stats();
-        stats.setMode(0);
-        document.body.appendChild(stats.domElement);
-
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.top = '0px';
-        stats.domElement.style.left = '0px';
-
-        return stats;
-    }
-
     function update(){
-        stats.update();
         scene.update(); //threejs scene
         triggers.update();
 
@@ -58,6 +44,7 @@
 
     function _resizeCanvas() {
         // resize shizzlewizzle
+        console.log("resize");
     }
 
     init();

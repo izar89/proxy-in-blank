@@ -10,7 +10,6 @@
     var stats, scene, companions, triggers, soundcloud;
 
     function init(){
-        stats = initStats();
         scene = new Scene();
         triggers = new Triggers();
         companions = new Companions();
@@ -33,20 +32,7 @@
         };
     }
 
-    function initStats(){
-        stats = new Stats();
-        stats.setMode(0);
-        document.body.appendChild(stats.domElement);
-
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.top = '0px';
-        stats.domElement.style.left = '0px';
-
-        return stats;
-    }
-
     function update(){
-        stats.update();
         scene.update(); //threejs scene
         triggers.update();
 
@@ -59,14 +45,15 @@
 
     function _resizeCanvas() {
         // resize shizzlewizzle
+        console.log("resize");
     }
 
     init();
 
 })();
 
-},{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports={
+},{"./modules/audio/Triggers":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Scene.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/data/sounds.json":[function(require,module,exports){
+module.exports=module.exports=module.exports=module.exports=module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -147,7 +134,7 @@ module.exports=module.exports={
         "file": "sounds/26.mp3"
     }]
 }
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/BufferLoader.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/audio/BufferLoader.js":[function(require,module,exports){
 function BufferLoader(context, urlList, callback) {
 	this.context = context;
 	this.urlList = urlList;
@@ -198,7 +185,7 @@ BufferLoader.prototype.load = function() {
 
 module.exports = BufferLoader;
 
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Player.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/audio/Player.js":[function(require,module,exports){
 function Player(context) {
     this.context = context;
 }
@@ -221,7 +208,7 @@ Player.prototype.play = function(audio) {
 };
 
 module.exports = Player;
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/audio/Triggers.js":[function(require,module,exports){
 /* globals AudioContext */
 
 var Util = require('../util/Util');
@@ -308,7 +295,7 @@ Triggers.prototype.update = function() {
 };
 
 module.exports = Triggers;
-},{"../../data/sounds":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json","../svg/SVGHelper":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js","../svg/Trigger":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Trigger.js","../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js","./BufferLoader":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/BufferLoader.js","./Player":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Player.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js":[function(require,module,exports){
+},{"../../data/sounds":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/data/sounds.json","../svg/SVGHelper":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/SVGHelper.js","../svg/Trigger":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/Trigger.js","../util/Util":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/util/Util.js","./BufferLoader":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/audio/BufferLoader.js","./Player":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/audio/Player.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/companions/Companions.js":[function(require,module,exports){
 var Companion = require('../svg/Companion');
 var SVGHelper = require('../svg/SVGHelper');
 
@@ -369,7 +356,7 @@ function _removeCompanion(client) {
 }
 
 module.exports = Companions;
-},{"../svg/Companion":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Companion.js","../svg/SVGHelper":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/soundcloud/SoundCloud.js":[function(require,module,exports){
+},{"../svg/Companion":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/Companion.js","../svg/SVGHelper":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/SVGHelper.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/soundcloud/SoundCloud.js":[function(require,module,exports){
 /* globals SC */
 
 var result, currentTracks, socket;
@@ -467,7 +454,7 @@ function emptyPlaylistHandler() {
 }
 
 module.exports = SoundCloud;
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Companion.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/Companion.js":[function(require,module,exports){
 var SVGHelper = require('./SVGHelper');
 
 function Companion(client) {
@@ -508,7 +495,7 @@ Companion.prototype.move = function(position) {
 };
 
 module.exports = Companion;
-},{"./SVGHelper":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js":[function(require,module,exports){
+},{"./SVGHelper":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/SVGHelper.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/SVGHelper.js":[function(require,module,exports){
 var namespace = "http://www.w3.org/2000/svg";
 
 function SVGHelper(){
@@ -521,7 +508,7 @@ SVGHelper.createElement = function(el){
 
 module.exports = SVGHelper;
 
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Trigger.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/Trigger.js":[function(require,module,exports){
 var SVGHelper = require('./SVGHelper');
 var Util = require('../util/Util');
 
@@ -558,7 +545,7 @@ Trigger.prototype.move = function(duration) {
 
 module.exports = Trigger;
 
-},{"../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js","./SVGHelper":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js":[function(require,module,exports){
+},{"../util/Util":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/util/Util.js","./SVGHelper":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/svg/SVGHelper.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/util/Util.js":[function(require,module,exports){
 function Util() {
 
 }
@@ -605,7 +592,7 @@ Util.getVolume = function(bounds, y) {
 };
 
 module.exports = Util;
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/util/requestAnimationFrame.js":[function(require,module,exports){
 module.exports = (function(){
 	return  window.requestAnimationFrame       ||
 	        window.webkitRequestAnimationFrame ||
@@ -617,7 +604,7 @@ module.exports = (function(){
 	        };
 })();
 
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Ground.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Ground.js":[function(require,module,exports){
 var scene, groundMesh, groundMeshPositionX, groundMeshCopy, groundMeshCopyPositionX, noise = [], verticesWidth;
 
 function Ground(scene_){
@@ -683,14 +670,13 @@ Ground.prototype.update = function(speed){
 
 module.exports = Ground;
 
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Scene.js":[function(require,module,exports){
 var Water = require('../webgl/Water');
 var Ground = require('../webgl/Ground');
 var Sky = require('../webgl/Sky');
 
 var container, clock, scene, camera, renderer;
 var speed, water, ground, sky;
-var copyPass, composer;
 
 function Scene(){
 	container = document.querySelector('.container');
@@ -742,22 +728,22 @@ function initRenderer(){
 	container.appendChild(renderer.domElement);
 }
 
-function initPostprocessing() {
-  var renderModel = new THREE.RenderPass(scene, camera);
-  copyPass = new THREE.ShaderPass(THREE.CopyShader);
-  composer = new THREE.EffectComposer(renderer);
-  composer.addPass(renderModel);
-  composer.addPass(copyPass);
-  copyPass.renderToScreen = true;
-
-  var effectFilm = new THREE.FilmPass(0.1, 0, 448, false);
-  composer.addPass(effectFilm);
-}
-
 function initObjects(){
 	water = new Water(scene);
 	ground = new Ground(scene);
 	sky = new Sky(scene);
+}
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize(){
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    update();
+
 }
 
 Scene.prototype.update = function(){
@@ -778,7 +764,7 @@ Scene.prototype.setSpeed = function(speed){
 
 module.exports = Scene;
 
-},{"../webgl/Ground":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Ground.js","../webgl/Sky":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Sky.js","../webgl/Water":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Water.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Sky.js":[function(require,module,exports){
+},{"../webgl/Ground":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Ground.js","../webgl/Sky":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Sky.js","../webgl/Water":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Water.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Sky.js":[function(require,module,exports){
 var scene, skyMesh, skyMeshPositionX, skyMeshCopy, skyMeshCopyPositionX, noise = [], verticesWidth;
 
 function Sky(scene_){
@@ -845,7 +831,7 @@ Sky.prototype.update = function(speed){
 
 module.exports = Sky;
 
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Water.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/webgl/Water.js":[function(require,module,exports){
 var Util = require('../util/Util');
 var scene, waterMesh, waterMeshPositionX, waterMeshCopy, waterMeshCopyPositionX, noise = [], verticesWidth;
 
@@ -939,4 +925,4 @@ Water.prototype.update = function(time, speed){
 module.exports = Water;
 
 
-},{"../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js"}]},{},["./_js/app.js"]);
+},{"../util/Util":"/Users/S/Documents/devine3/rmdIII/eindopdracht/prox/_js/modules/util/Util.js"}]},{},["./_js/app.js"]);

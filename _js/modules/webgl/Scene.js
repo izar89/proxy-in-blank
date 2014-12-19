@@ -4,7 +4,6 @@ var Sky = require('../webgl/Sky');
 
 var container, clock, scene, camera, renderer;
 var speed, water, ground, sky;
-var copyPass, composer;
 
 function Scene(){
 	container = document.querySelector('.container');
@@ -56,22 +55,22 @@ function initRenderer(){
 	container.appendChild(renderer.domElement);
 }
 
-function initPostprocessing() {
-  var renderModel = new THREE.RenderPass(scene, camera);
-  copyPass = new THREE.ShaderPass(THREE.CopyShader);
-  composer = new THREE.EffectComposer(renderer);
-  composer.addPass(renderModel);
-  composer.addPass(copyPass);
-  copyPass.renderToScreen = true;
-
-  var effectFilm = new THREE.FilmPass(0.1, 0, 448, false);
-  composer.addPass(effectFilm);
-}
-
 function initObjects(){
 	water = new Water(scene);
 	ground = new Ground(scene);
 	sky = new Sky(scene);
+}
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize(){
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    update();
+
 }
 
 Scene.prototype.update = function(){
