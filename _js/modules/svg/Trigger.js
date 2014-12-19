@@ -18,13 +18,12 @@ function _create() {
 	this.element.setAttribute('height', this.size.height);
 	this.element.setAttribute('fill', this.fill);
 	this.element.setAttribute('timestamp', this.timestamp);
+	this.element.setAttribute('stroke', this.fill);
+	this.element.setAttribute('stroke-width', '0');
 }
 
 Trigger.prototype.play = function() {
-	var player = this.element.animate([
-		{border: '0 solid '+ this.fill},
-		{border: (this.size.width / 2) + 'px solid '+ this.fill}
-		], {duration: 500});
+	console.log('jow, playplay');
 };
 
 Trigger.prototype.moveTrigger = function(duration) {

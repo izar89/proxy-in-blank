@@ -53,12 +53,8 @@
 
 })();
 
-},{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
-	"server": "http://localhost:3000" // https://calm-oasis-6526.herokuapp.com
-}
-},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+},{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
+module.exports=module.exports=module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -221,7 +217,6 @@ var Trigger = require('../svg/Trigger');
 var BufferLoader = require('./BufferLoader');
 var Player = require('./Player');
 var sounds = require('../../data/sounds').sounds;
-var settings = require('../../data/settings');
 
 var bounds, triggers, svg, player, socket, buffer, min_duration, max_duration;
 
@@ -251,7 +246,7 @@ function _initSettings() {
 
 function _initSocket(b) {
 	buffer = b;
-	socket = io(settings.server);
+	socket = io('/');
 	socket.addEventListener('add_trigger', _addTrigger);
 	socket.addEventListener('trigger_played', _playSocketTrigger);
 }
@@ -302,7 +297,7 @@ Triggers.prototype.update = function() {
 };
 
 module.exports = Triggers;
-},{"../../data/settings":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json","../../data/sounds":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json","../svg/Trigger":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Trigger.js","../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js","./BufferLoader":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/BufferLoader.js","./Player":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Player.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companion.js":[function(require,module,exports){
+},{"../../data/sounds":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json","../svg/Trigger":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Trigger.js","../util/Util":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/Util.js","./BufferLoader":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/BufferLoader.js","./Player":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Player.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companion.js":[function(require,module,exports){
 function Companion(client) {
 	var companion = new createjs.Shape();
 	companion.graphics.f('#e39c8d').dc(0, 0, 20);
@@ -318,7 +313,6 @@ function Companion(client) {
 module.exports = Companion;
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js":[function(require,module,exports){
 var Companion = require('./Companion');
-var settings = require('../../data/settings');
 
 var companions, stage, self, socket;
 
@@ -397,7 +391,7 @@ Companions.prototype.moveSelf = function(e) {
 };
 
 function _initSocket() {
-	socket = io(settings.server);
+	socket = io('/');
 	socket.addEventListener('add_companion', _addCompanion);
 	socket.addEventListener('move_companion', _moveCompanion);
 	socket.addEventListener('remove_companion', _removeCompanion);
@@ -437,7 +431,7 @@ Companions.prototype.resizeCanvas = function(width, height) {
 };
 
 module.exports = Companions;
-},{"../../data/settings":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json","./Companion":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companion.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js":[function(require,module,exports){
+},{"./Companion":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companion.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js":[function(require,module,exports){
 var namespace = "http://www.w3.org/2000/svg";
 
 function SVGHelper(){
@@ -471,13 +465,12 @@ function _create() {
 	this.element.setAttribute('height', this.size.height);
 	this.element.setAttribute('fill', this.fill);
 	this.element.setAttribute('timestamp', this.timestamp);
+	this.element.setAttribute('stroke', this.fill);
+	this.element.setAttribute('stroke-width', '0');
 }
 
 Trigger.prototype.play = function() {
-	var player = this.element.animate([
-		{border: '0 solid '+ this.fill},
-		{border: (this.size.width / 2) + 'px solid '+ this.fill}
-		], {duration: 500});
+	console.log('jow, playplay');
 };
 
 Trigger.prototype.moveTrigger = function(duration) {

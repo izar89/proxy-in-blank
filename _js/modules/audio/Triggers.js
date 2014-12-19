@@ -5,7 +5,6 @@ var Trigger = require('../svg/Trigger');
 var BufferLoader = require('./BufferLoader');
 var Player = require('./Player');
 var sounds = require('../../data/sounds').sounds;
-var settings = require('../../data/settings');
 
 var bounds, triggers, svg, player, socket, buffer, min_duration, max_duration;
 
@@ -35,7 +34,7 @@ function _initSettings() {
 
 function _initSocket(b) {
 	buffer = b;
-	socket = io(settings.server);
+	socket = io('/');
 	socket.addEventListener('add_trigger', _addTrigger);
 	socket.addEventListener('trigger_played', _playSocketTrigger);
 }

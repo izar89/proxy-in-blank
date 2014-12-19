@@ -1,5 +1,4 @@
 var Companion = require('./Companion');
-var settings = require('../../data/settings');
 
 var companions, stage, self, socket;
 
@@ -78,7 +77,7 @@ Companions.prototype.moveSelf = function(e) {
 };
 
 function _initSocket() {
-	socket = io(settings.server);
+	socket = io('/');
 	socket.addEventListener('add_companion', _addCompanion);
 	socket.addEventListener('move_companion', _moveCompanion);
 	socket.addEventListener('remove_companion', _removeCompanion);
