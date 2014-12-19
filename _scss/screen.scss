@@ -24,3 +24,25 @@ svg {
 	left: 0;
 	z-index: 5;
 }
+
+#soundbar {
+	position: fixed;
+	bottom: 0;
+	z-index: 999;
+	height: 50px;
+	width: 100%;
+	background-color: #fff;
+	opacity: 0.9;
+
+	#soundbar-search input {
+		margin: 5px;
+		border: solid 4px #c9c9c9;
+		padding: 10px;
+		width: 300px;
+		transition: border 0.3s;
+
+		&:focus {
+			border: solid 4px #969696;
+		}
+	}
+}
