@@ -11,8 +11,8 @@
     function init(){
         stats = initStats();
         scene = new Scene();
-        companions = new Companions();
         triggers = new Triggers();
+        companions = new Companions();
         soundcloud = new SoundCloud();
 
         document.addEventListener('mousemove', _triggerMovement);

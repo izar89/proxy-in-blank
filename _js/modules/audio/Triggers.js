@@ -2,6 +2,7 @@
 
 var Util = require('../util/Util');
 var Trigger = require('../svg/Trigger');
+var SVGHelper = require('../svg/SVGHelper');
 var BufferLoader = require('./BufferLoader');
 var Player = require('./Player');
 var sounds = require('../../data/sounds').sounds;
@@ -19,7 +20,7 @@ function _initSettings() {
 		border: 40
 	};
 
-	svg = document.querySelector('#triggers');
+	svg = document.querySelector('svg').appendChild(SVGHelper.createElement('g'));
 	triggers = [];
 
 	var context = new AudioContext();

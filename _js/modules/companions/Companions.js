@@ -1,4 +1,5 @@
 var Companion = require('../svg/Companion');
+var SVGHelper = require('../svg/SVGHelper');
 
 var companions, svg, self, socket;
 
@@ -8,7 +9,7 @@ function Companions() {
 }
 
 function _initSettings() {
-	svg = document.querySelector('#companions');
+	svg = document.querySelector('svg').appendChild(SVGHelper.createElement('g'));
 	companions = [];
 }
 
