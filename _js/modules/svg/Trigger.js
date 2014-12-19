@@ -18,13 +18,7 @@ function _create() {
 	this.element.setAttribute('height', this.size.height);
 	this.element.setAttribute('fill', this.fill);
 	this.element.setAttribute('timestamp', this.timestamp);
-	this.element.setAttribute('stroke', this.fill);
-	this.element.setAttribute('stroke-width', '0');
 }
-
-Trigger.prototype.play = function() {
-	console.log('jow, playplay');
-};
 
 Trigger.prototype.move = function(duration) {
     var player = this.element.animate([{

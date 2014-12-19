@@ -30,7 +30,7 @@
         var player = modal.animate([{opacity: 1}, {opacity: 0}], 500);
         player.onfinish = function() {
             modal.parentNode.removeChild(modal);
-        }
+        };
     }
 
     function initStats(){
@@ -66,7 +66,7 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports=module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -286,7 +286,6 @@ function _triggerHandler(e) {
 	var curTrigger = _.findWhere(triggers, {
 		'timestamp': parseInt(e.currentTarget.getAttribute('timestamp'))
 	});
-	curTrigger.play();
 	player.play(curTrigger);
 
 	socket.emit('play_trigger', curTrigger.timestamp);
@@ -297,7 +296,6 @@ function _playSocketTrigger(timestamp) {
 		'timestamp': timestamp
 	});
 	if (curTrigger) {
-		curTrigger.play();
 		player.play(curTrigger);
 	}
 }
@@ -392,6 +390,7 @@ function initSocket() {
 	socket = io('/');
 	initSoundbar();
 	socket.addEventListener('currentTrack', currentTrackHandler, false);
+	socket.addEventListener('emptyPlaylist', emptyPlaylistHandler, false);
 }
 
 function initSoundbar() {
@@ -439,11 +438,15 @@ function selectTrackHandler(e) {
 }
 
 function currentTrackHandler(track) {
+	console.log('TRAAAKAKAKAKAKAAKKAKAKAAK');
+	console.log(track);
 	if(track.stream_url) {
 		var thumb = document.querySelector('#song .thumb');
 		var title = document.querySelector('#song .title');
 		var artist = document.querySelector('#song .artist');
-		thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
+		if(track.thumb) {
+			thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
+		}
 		title.innerHTML = track.title;
 		artist.innerHTML = track.artist;
 
@@ -452,6 +455,15 @@ function currentTrackHandler(track) {
 		audio.currentTime = track.position;
 		audio.play();
 	}
+}
+
+function emptyPlaylistHandler() {
+	var thumb = document.querySelector('#song .thumb');
+	var title = document.querySelector('#song .title');
+	var artist = document.querySelector('#song .artist');
+	thumb.innerHTML = '';
+	title.innerHTML = '';
+	artist.innerHTML = '';
 }
 
 module.exports = SoundCloud;
@@ -530,13 +542,7 @@ function _create() {
 	this.element.setAttribute('height', this.size.height);
 	this.element.setAttribute('fill', this.fill);
 	this.element.setAttribute('timestamp', this.timestamp);
-	this.element.setAttribute('stroke', this.fill);
-	this.element.setAttribute('stroke-width', '0');
 }
-
-Trigger.prototype.play = function() {
-	console.log('jow, playplay');
-};
 
 Trigger.prototype.move = function(duration) {
     var player = this.element.animate([{

@@ -62,7 +62,6 @@ function _triggerHandler(e) {
 	var curTrigger = _.findWhere(triggers, {
 		'timestamp': parseInt(e.currentTarget.getAttribute('timestamp'))
 	});
-	curTrigger.play();
 	player.play(curTrigger);
 
 	socket.emit('play_trigger', curTrigger.timestamp);
@@ -73,7 +72,6 @@ function _playSocketTrigger(timestamp) {
 		'timestamp': timestamp
 	});
 	if (curTrigger) {
-		curTrigger.play();
 		player.play(curTrigger);
 	}
 }

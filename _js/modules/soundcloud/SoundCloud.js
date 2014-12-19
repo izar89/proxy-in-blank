@@ -18,6 +18,7 @@ function initSocket() {
 	socket = io('/');
 	initSoundbar();
 	socket.addEventListener('currentTrack', currentTrackHandler, false);
+	socket.addEventListener('emptyPlaylist', emptyPlaylistHandler, false);
 }
 
 function initSoundbar() {
@@ -65,11 +66,15 @@ function selectTrackHandler(e) {
 }
 
 function currentTrackHandler(track) {
+	console.log('TRAAAKAKAKAKAKAAKKAKAKAAK');
+	console.log(track);
 	if(track.stream_url) {
 		var thumb = document.querySelector('#song .thumb');
 		var title = document.querySelector('#song .title');
 		var artist = document.querySelector('#song .artist');
-		thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
+		if(track.thumb) {
+			thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
+		}
 		title.innerHTML = track.title;
 		artist.innerHTML = track.artist;
 
@@ -78,6 +83,15 @@ function currentTrackHandler(track) {
 		audio.currentTime = track.position;
 		audio.play();
 	}
+}
+
+function emptyPlaylistHandler() {
+	var thumb = document.querySelector('#song .thumb');
+	var title = document.querySelector('#song .title');
+	var artist = document.querySelector('#song .artist');
+	thumb.innerHTML = '';
+	title.innerHTML = '';
+	artist.innerHTML = '';
 }
 
 module.exports = SoundCloud;

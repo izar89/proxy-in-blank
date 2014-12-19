@@ -4,7 +4,8 @@
 	outline: none;
 }
 
-canvas, svg {
+canvas,
+svg {
 	position: absolute;
 	cursor: none;
 }
@@ -43,7 +44,10 @@ svg {
 	&:hover {
 		#search-results {
 			opacity: 1;
+			display: block;
 		}
+
+		opacity: 1;
 	}
 
 	#search-results {
@@ -54,6 +58,7 @@ svg {
 		padding: 10px;
 		opacity: 0;
 		transition: opacity .3s;
+		display: none;
 
 		li {
 			color: #323440;
@@ -86,7 +91,7 @@ svg {
 			border: 0;
 			box-sizing: border-box;
 			font-size: 34px;
-			color: #FFF;
+			color: #fff;
 			position: absolute;
 		}
 	}
@@ -94,7 +99,7 @@ svg {
 	#song {
 		width: 400px;
 		height: 80px;
-		color: #FFF;
+		color: #fff;
 		margin: 0 auto;
 
 		.thumb {
@@ -129,20 +134,15 @@ svg {
 		padding: 20px 10px;
 		margin: -80px 50px 0 0;
 	}
-
-	&:hover {
-		opacity: 1;
-	}
 }
 
 #modal {
 	position: absolute;
 	width: 50%;
-	height: 50%;
-	background-color: rgba(0,0,0,.5);
+	background-color: rgba(0, 0, 0, .5);
 	z-index: 100;
 	padding: 30px;
-	color: #FFF;
+	color: #fff;
 	margin: -12.5% 0 0 -25%;
 	top: 50%;
 	left: 50%;

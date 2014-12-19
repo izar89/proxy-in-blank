@@ -29,7 +29,7 @@
         var player = modal.animate([{opacity: 1}, {opacity: 0}], 500);
         player.onfinish = function() {
             modal.parentNode.removeChild(modal);
-        }
+        };
     }
 
     function initStats(){

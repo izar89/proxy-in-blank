@@ -32,6 +32,8 @@ setInterval(function() {
 
 if(playlist.length > 0) {
     setCurrentTrack();
+} else {
+    io.emit('emptyPlaylist');
 }
 
 function setCurrentTrack() {
@@ -48,7 +50,7 @@ setInterval(function() {
             if(playlist.length > 0) {
                 setCurrentTrack();
             } else {
-                io.emit('currentTrack', {});
+                io.emit('emptyPlaylist');
             }
             currentTrack = {position: 0};
         }
@@ -69,7 +71,9 @@ io.on('connection', function(socket) {
     var client = new Client(max_id + 1, socket.id);
     clients.push(client);
     socket.emit('self', client);
-    socket.emit('currentTrack', currentTrack);
+    if(playlist.length > 0) {
+        setCurrentTrack();
+    }
 
     _.each(clients, function(c) {
         if (c !== client) {
