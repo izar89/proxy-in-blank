@@ -20,6 +20,13 @@ function _create() {
 	this.element.setAttribute('timestamp', this.timestamp);
 }
 
+Trigger.prototype.play = function() {
+	var player = this.element.animate([
+		{border: '0 solid '+ this.fill},
+		{border: (this.size.width / 2) + 'px solid '+ this.fill}
+		], {duration: 500});
+};
+
 Trigger.prototype.moveTrigger = function(duration) {
     var player = this.element.animate([{
         transform: 'translateX(' + (this.position.x + window.innerWidth )+ 'px)'

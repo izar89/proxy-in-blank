@@ -54,11 +54,11 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/settings.json":[function(require,module,exports){
-module.exports={
-	"server": "https://calm-oasis-6526.herokuapp.com" // https://calm-oasis-6526.herokuapp.com
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+	"server": "http://localhost:3000" // https://calm-oasis-6526.herokuapp.com
 }
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -223,7 +223,7 @@ var Player = require('./Player');
 var sounds = require('../../data/sounds').sounds;
 var settings = require('../../data/settings');
 
-var bounds, triggers, svg, player, socket, buffer, min_duration, max_duration, currentTime;
+var bounds, triggers, svg, player, socket, buffer, min_duration, max_duration;
 
 function Triggers() {
 	_initSettings();
@@ -265,17 +265,12 @@ function _addTrigger(t) {
 	svg.appendChild(trigger.element);
 	triggers.push(trigger);
 
-	trigger.element.setAttribute('trigger', triggers.indexOf(trigger));
-	setTimeout(function() {
-		svg.removeChild(trigger.element);
-		triggers = _.reject(triggers, trigger);
-	}, 30000);
-
 	var duration = max_duration + t.sound.id / sounds.length * (min_duration - max_duration);
 	var player = trigger.moveTrigger(duration);
 
-	player.onfinish = function(e) {
-		console.log('per aspera ad terra!');
+	player.onfinish = function() {
+		svg.removeChild(trigger.element);
+		triggers = _.reject(triggers, trigger);
 	};
 }
 
@@ -283,6 +278,7 @@ function _triggerHandler(e) {
 	var curTrigger = _.findWhere(triggers, {
 		'timestamp': parseInt(e.currentTarget.getAttribute('timestamp'))
 	});
+	curTrigger.play();
 	player.play(curTrigger);
 
 	socket.emit('play_trigger', curTrigger.timestamp);
@@ -293,6 +289,7 @@ function _playSocketTrigger(timestamp) {
 		'timestamp': timestamp
 	});
 	if (curTrigger) {
+		curTrigger.play();
 		player.play(curTrigger);
 	}
 }
@@ -475,6 +472,13 @@ function _create() {
 	this.element.setAttribute('fill', this.fill);
 	this.element.setAttribute('timestamp', this.timestamp);
 }
+
+Trigger.prototype.play = function() {
+	var player = this.element.animate([
+		{border: '0 solid '+ this.fill},
+		{border: (this.size.width / 2) + 'px solid '+ this.fill}
+		], {duration: 500});
+};
 
 Trigger.prototype.moveTrigger = function(duration) {
     var player = this.element.animate([{

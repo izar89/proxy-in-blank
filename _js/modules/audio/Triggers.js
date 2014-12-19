@@ -7,7 +7,7 @@ var Player = require('./Player');
 var sounds = require('../../data/sounds').sounds;
 var settings = require('../../data/settings');
 
-var bounds, triggers, svg, player, socket, buffer, min_duration, max_duration, currentTime;
+var bounds, triggers, svg, player, socket, buffer, min_duration, max_duration;
 
 function Triggers() {
 	_initSettings();
@@ -49,17 +49,12 @@ function _addTrigger(t) {
 	svg.appendChild(trigger.element);
 	triggers.push(trigger);
 
-	trigger.element.setAttribute('trigger', triggers.indexOf(trigger));
-	setTimeout(function() {
-		svg.removeChild(trigger.element);
-		triggers = _.reject(triggers, trigger);
-	}, 30000);
-
 	var duration = max_duration + t.sound.id / sounds.length * (min_duration - max_duration);
 	var player = trigger.moveTrigger(duration);
 
-	player.onfinish = function(e) {
-		console.log('per aspera ad terra!');
+	player.onfinish = function() {
+		svg.removeChild(trigger.element);
+		triggers = _.reject(triggers, trigger);
 	};
 }
 
@@ -67,6 +62,7 @@ function _triggerHandler(e) {
 	var curTrigger = _.findWhere(triggers, {
 		'timestamp': parseInt(e.currentTarget.getAttribute('timestamp'))
 	});
+	curTrigger.play();
 	player.play(curTrigger);
 
 	socket.emit('play_trigger', curTrigger.timestamp);
@@ -77,6 +73,7 @@ function _playSocketTrigger(timestamp) {
 		'timestamp': timestamp
 	});
 	if (curTrigger) {
+		curTrigger.play();
 		player.play(curTrigger);
 	}
 }
