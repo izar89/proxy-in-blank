@@ -15,6 +15,7 @@
     "three.js": "*",
     "underscore": "~1.7.0",
     "socket.io-client": "~1.2.1",
-    "easeljs": "*"
+    "easeljs": "*",
+    "d3": "~3.5.2"
   }
 }

@@ -34,7 +34,6 @@
     function update(){
         stats.update();
         scene.update(); //threejs scene
-        companions.update();
         triggers.update();
 
         requestAnimationFrame(update);
@@ -45,7 +44,7 @@
     }
 
     function _resizeCanvas() {
-        companions.resizeCanvas(window.innerWidth, window.innerHeight);
+        // resize shizzlewizzle
     }
 
     init();

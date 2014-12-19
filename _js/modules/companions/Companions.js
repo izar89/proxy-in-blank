@@ -1,36 +1,32 @@
-var Companion = require('./Companion');
+var Companion = require('../svg/Companion');
 
-var companions, stage, self, socket;
+var companions, svg, self, socket;
 
 function Companions() {
 	_initSettings();
-	_initCanvas();
-	_createSelf();
 	_initSocket();
 }
 
 function _initSettings() {
+	svg = document.querySelector('#companions');
 	companions = [];
 }
 
-function _initCanvas() {
-	var canvas = document.createElement('canvas');
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	document.querySelector('.container').appendChild(canvas);
-
-	stage = new createjs.Stage(canvas);
+function _initSocket() {
+	socket = io('/');
+	socket.addEventListener('self', _createSelf);
+	socket.addEventListener('add_companion', _addCompanion);
+	socket.addEventListener('move_companion', _moveCompanion);
+	socket.addEventListener('remove_companion', _removeCompanion);
 }
 
-function _createSelf() {
-	self = new createjs.Shape();
-	self.graphics.f('#E34B2A').dc(0, 0, 20);
-	self.trail = [];
-	stage.addChild(self);
+function _createSelf(client) {
+	self = new Companion(client);
+	svg.appendChild(self.element);
 }
 
 function _addTrail(object) {
-	var trail = new createjs.Shape();
+	/*var trail = new createjs.Shape();
 
 	if (typeof object.xpast !== "undefined" || typeof object.ypast !== "undefined") {
 		trail.graphics.s("#E34B2A").ss(1, "round").quadraticCurveTo(object.xpast, object.ypast, object.x, object.y);
@@ -57,63 +53,64 @@ function _addTrail(object) {
 	object.xpast = object.x;
 	object.ypast = object.y;
 
-	stage.addChildAt(trail, 0);
+	stage.addChildAt(trail, 0);*/
 }
 
 function _removeTrail(trail) {
+	/*
 	for (var i = 0; i < trail.length; i++) {
 		stage.removeChild(trail[i]);
-	}
+	}*/
 }
 
 Companions.prototype.moveSelf = function(e) {
-	self.x = e.pageX;
-	self.y = e.pageY;
-	socket.emit('update_position', {
-		x: self.x,
-		y: self.y
-	});
-	_addTrail(self);
+	if(self) {
+		self.move({x: e.pageX, y: e.pageY});
+		socket.emit('update_position', {
+			x: self.position.x,
+			y: self.position.y
+		});
+
+		//_moveTrail(self);
+	}
 };
 
-function _initSocket() {
-	socket = io('/');
-	socket.addEventListener('add_companion', _addCompanion);
-	socket.addEventListener('move_companion', _moveCompanion);
-	socket.addEventListener('remove_companion', _removeCompanion);
+function _moveTrail(companion) {
+	/*companion.movement++;
+	if(companion.movement >= 20) {
+		companion.trailCoords.push({x: companion.position.x, y: companion.position.y});
+		companion.movement = 0;
+	}
+
+	if(companion.trailCoords.length > 4) {
+		companion.trailCoords.shift();
+	}
+
+	companion.updateTrail({x: companion.position.x, y: companion.position.y});*/
 }
 
 function _addCompanion(client) {
 	var companion = new Companion(client);
 	companions.push(companion);
-	stage.addChild(companion);
+	svg.appendChild(companion.element);
+	//svg.appendChild(companion.trail);
 }
 
 function _moveCompanion(client) {
 	var companion = _.findWhere(companions, {
 		'clientid': client.id
 	});
-	companion.x = client.x;
-	companion.y = client.y;
-	_addTrail(companion);
+	companion.move({x: client.x, y: client.y});
+	//_addTrail(companion);
 }
 
 function _removeCompanion(client) {
 	var companion = _.findWhere(companions, {
 		'clientid': client.id
 	});
-	stage.removeChild(companion);
-	_removeTrail(companion.trail);
+	svg.removeChild(companion.element);
+	//_removeTrail(companion.element.trail);
 	companions = _.reject(companions, companion);
 }
-
-Companions.prototype.update = function() {
-	stage.update();
-};
-
-Companions.prototype.resizeCanvas = function(width, height) {
-	stage.canvas.width = width;
-	stage.canvas.height = height;
-};
 
 module.exports = Companions;

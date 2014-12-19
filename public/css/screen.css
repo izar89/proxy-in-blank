@@ -43,8 +43,10 @@ html {
 *, *:before, *:after {
   box-sizing: inherit; }
 
+* {
+  cursor: none; }
+
 canvas {
-  cursor: none;
   position: absolute; }
 
 html, body {
@@ -57,8 +59,12 @@ html, body {
   position: relative;
   overflow: hidden; }
 
-svg {
+#triggers, #companions {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 4; }
+
+#companions {
+  pointer-events: all;
   z-index: 5; }

@@ -1,7 +1,10 @@
 @import 'base';
 
-canvas {
+* {
 	cursor: none;
+}
+
+canvas {
 	position: absolute;
 }
 
@@ -18,9 +21,14 @@ body {
 	overflow: hidden;
 }
 
-svg {
+#triggers, #companions {
 	position: absolute;
 	top: 0;
 	left: 0;
+	z-index: 4;
+}
+
+#companions {
+	pointer-events: all;
 	z-index: 5;
 }

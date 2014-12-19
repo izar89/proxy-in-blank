@@ -19,7 +19,7 @@ function _initSettings() {
 		border: 40
 	};
 
-	svg = document.querySelector('svg');
+	svg = document.querySelector('#triggers');
 	triggers = [];
 
 	var context = new AudioContext();
@@ -49,7 +49,7 @@ function _addTrigger(t) {
 	triggers.push(trigger);
 
 	var duration = max_duration + t.sound.id / sounds.length * (min_duration - max_duration);
-	var player = trigger.moveTrigger(duration);
+	var player = trigger.move(duration);
 
 	player.onfinish = function() {
 		svg.removeChild(trigger.element);

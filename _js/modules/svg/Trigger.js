@@ -26,7 +26,7 @@ Trigger.prototype.play = function() {
 	console.log('jow, playplay');
 };
 
-Trigger.prototype.moveTrigger = function(duration) {
+Trigger.prototype.move = function(duration) {
     var player = this.element.animate([{
         transform: 'translateX(' + (this.position.x + window.innerWidth )+ 'px)'
     }, {
