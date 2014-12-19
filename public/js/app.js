@@ -55,7 +55,7 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
+module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -437,7 +437,7 @@ function currentTrackHandler(track) {
 
 	var audio = document.querySelector('#track');
 	audio.setAttribute('src', track.stream_url +'?client_id=bd3361bf40be90ef0b5bdf94c008674c');
-	audio.play(track.position);
+	audio.play();
 }
 
 module.exports = SoundCloud;
@@ -601,18 +601,18 @@ module.exports = (function(){
 var scene, groundMesh, groundMeshPositionX, groundMeshCopy, groundMeshCopyPositionX, noise = [], verticesWidth;
 
 function Ground(scene_){
-	scene = scene_;
-	initGroundMesh();
-	initGroundMeshCopy();
-	addNoise();
+    scene = scene_;
+    initGroundMesh();
+    initGroundMeshCopy();
+    addNoise();
 }
 
 function initGroundMesh(){
-	var height = 450;
-	verticesWidth = 80;
-	var verticesheight = 50;
+    var height = 450;
+    verticesWidth = 80;
+    var verticesheight = 50;
   var geometry = new THREE.PlaneGeometry(window.innerWidth, height, Math.round(window.innerWidth/verticesWidth), Math.round(height/verticesheight));
-	var material = new THREE.MeshLambertMaterial({color: 0xf4b580, emissive: 0xe76f54, shading: THREE.FlatShading});
+    var material = new THREE.MeshLambertMaterial({color: 0xf4b580, emissive: 0xe76f54, shading: THREE.FlatShading});
   groundMesh = new THREE.Mesh(geometry, material);
   groundMesh.rotation.x = -1.2;
   groundMesh.position.y = -window.innerHeight / 2 + 160;
@@ -622,7 +622,7 @@ function initGroundMesh(){
 }
 
 function initGroundMeshCopy(){
-	groundMeshCopy = groundMesh.clone();
+    groundMeshCopy = groundMesh.clone();
   groundMeshCopy.rotation.x = -1.2;
   groundMeshCopy.position.x = window.innerWidth;
   groundMeshCopy.position.y = -window.innerHeight / 2 + 160;
@@ -632,48 +632,51 @@ function initGroundMeshCopy(){
 }
 
 function addNoise(){
-	for(var i = 0; i < groundMesh.geometry.vertices.length; i++){
-  	noise[i] = Math.random() * 50;
-  	groundMesh.geometry.vertices[i].z = noise[i];
+    for(var i = 0; i < groundMesh.geometry.vertices.length; i++){
+    noise[i] = Math.random() * 50;
+    groundMesh.geometry.vertices[i].z = noise[i];
   }
 }
 
-Ground.prototype.update = function(){
-	for (var i = 0, l = groundMesh.geometry.vertices.length; i < l; i++){
-		//glue two water meshes together
-		var rowSize = Math.round(window.innerWidth/verticesWidth) + 1;
-		if(i % rowSize === 0){
-			groundMeshCopy.geometry.vertices[i].z = groundMesh.geometry.vertices[i + (rowSize - 1)].z;
-			groundMesh.geometry.vertices[i].z = groundMeshCopy.geometry.vertices[i + (rowSize - 1)].z;
-		}
-	}
+Ground.prototype.update = function(speed){
+    for (var i = 0, l = groundMesh.geometry.vertices.length; i < l; i++){
+        //glue two water meshes together
+        var rowSize = Math.round(window.innerWidth/verticesWidth) + 1;
+        if(i % rowSize === 0){
+            groundMeshCopy.geometry.vertices[i].z = groundMesh.geometry.vertices[i + (rowSize - 1)].z;
+            groundMesh.geometry.vertices[i].z = groundMeshCopy.geometry.vertices[i + (rowSize - 1)].z;
+        }
+    }
 
-	//sidescroll
-	groundMesh.position.x = groundMesh.position.x - 0.7;
-	groundMeshCopy.position.x = groundMeshCopy.position.x - 0.7;
+    //sidescroll
+    groundMesh.position.x = groundMesh.position.x - speed;
+    groundMeshCopy.position.x = groundMeshCopy.position.x - speed;
 
-	//snap back after sidescroll
-	if(groundMesh.position.x < groundMeshPositionX - window.innerWidth){
-		groundMesh.position.x = groundMeshPositionX;
-		groundMeshCopy.position.x = groundMeshCopyPositionX;
-	}
+    //snap back after sidescroll
+    if(groundMesh.position.x < groundMeshPositionX - window.innerWidth){
+        groundMesh.position.x = groundMeshPositionX;
+        groundMeshCopy.position.x = groundMeshCopyPositionX;
+    }
 
-	groundMesh.geometry.computeFaceNormals();
+    groundMesh.geometry.computeFaceNormals();
 };
 
 module.exports = Ground;
 
-
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js":[function(require,module,exports){
 var Water = require('../webgl/Water');
 var Ground = require('../webgl/Ground');
+var Sky = require('../webgl/Sky');
 
 var container, clock, scene, camera, renderer;
-var water, ground;
+var speed, water, ground, sky;
+var copyPass, composer;
 
 function Scene(){
 	container = document.querySelector('.container');
 	clock = new THREE.Clock();
+
+	speed = 1;
 
 	initScene();
 	initCamera();
@@ -692,14 +695,13 @@ function initCamera(){
 	var width = window.innerWidth;
 	var height = window.innerHeight;
 	camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, -500, 1000);
-	//camera.rotation.x = - Math.PI / 2; //top
 	scene.add(camera);
 }
 
 function initLights(){
-	var hemiLight = new THREE.HemisphereLight(0xff7a81, 0x000000, 0.5);
-  hemiLight.position.y = 500;
-  scene.add(hemiLight);
+	// var hemiLight = new THREE.HemisphereLight(0xff7a81, 0x000000, 0.5);
+ //  hemiLight.position.y = 500;
+ //  scene.add(hemiLight);
 
 	var spotLight = new THREE.SpotLight(0x999999, 1);
 	spotLight.castShadow = true;
@@ -720,25 +722,110 @@ function initRenderer(){
 	container.appendChild(renderer.domElement);
 }
 
+function initPostprocessing() {
+  var renderModel = new THREE.RenderPass(scene, camera);
+  copyPass = new THREE.ShaderPass(THREE.CopyShader);
+  composer = new THREE.EffectComposer(renderer);
+  composer.addPass(renderModel);
+  composer.addPass(copyPass);
+  copyPass.renderToScreen = true;
+
+  var effectFilm = new THREE.FilmPass(0.1, 0, 448, false);
+  composer.addPass(effectFilm);
+}
+
 function initObjects(){
 	water = new Water(scene);
 	ground = new Ground(scene);
+	sky = new Sky(scene);
 }
 
 Scene.prototype.update = function(){
 	var time = clock.getElapsedTime();
 
 	//Objects
-	water.update(time);
-	ground.update();
+	water.update(time, speed);
+	ground.update(speed - 0.3);
+	sky.update(speed - 0.9);
 
 	//Renderer
 	renderer.render(scene, camera);
 };
 
+Scene.prototype.setSpeed = function(speed){
+	this.speed = speed;
+};
+
 module.exports = Scene;
 
-},{"../webgl/Ground":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Ground.js","../webgl/Water":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Water.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Water.js":[function(require,module,exports){
+},{"../webgl/Ground":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Ground.js","../webgl/Sky":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Sky.js","../webgl/Water":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Water.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Sky.js":[function(require,module,exports){
+var scene, skyMesh, skyMeshPositionX, skyMeshCopy, skyMeshCopyPositionX, noise = [], verticesWidth;
+
+function Sky(scene_){
+    scene = scene_;
+    initSkyMesh();
+    initSkyMeshCopy();
+    addNoise();
+}
+
+function initSkyMesh(){
+    var height = 450;
+    verticesWidth = 80;
+    var verticesheight = 50;
+  var geometry = new THREE.PlaneGeometry(window.innerWidth, height, Math.round(window.innerWidth/verticesWidth), Math.round(height/verticesheight));
+    var material = new THREE.MeshLambertMaterial({color: 0xe7f5fc, emissive: 0xd9f0ff, shading: THREE.FlatShading});
+  skyMesh = new THREE.Mesh(geometry, material);
+  skyMesh.rotation.x = 1.2;
+  skyMesh.position.y = window.innerHeight / 2;
+  console.log(window.innerHeight);
+  skyMesh.position.z = -870;
+  scene.add(skyMesh);
+  skyMeshPositionX = skyMesh.position.x;
+}
+
+function initSkyMeshCopy(){
+  skyMeshCopy = skyMesh.clone();
+  skyMeshCopy.rotation.x = 1.2;
+  skyMeshCopy.position.x = window.innerWidth;
+  skyMeshCopy.position.y = window.innerHeight / 2;
+  skyMeshCopy.position.z = -870;
+  scene.add(skyMeshCopy);
+  skyMeshCopyPositionX = skyMeshCopy.position.x;
+}
+
+function addNoise(){
+    for(var i = 0; i < skyMesh.geometry.vertices.length; i++){
+    noise[i] = Math.random() * 50;
+    skyMesh.geometry.vertices[i].z = noise[i];
+  }
+}
+
+Sky.prototype.update = function(speed){
+    for (var i = 0, l = skyMesh.geometry.vertices.length; i < l; i++){
+        //glue two water meshes together
+        var rowSize = Math.round(window.innerWidth/verticesWidth) + 1;
+        if(i % rowSize === 0){
+            skyMeshCopy.geometry.vertices[i].z = skyMesh.geometry.vertices[i + (rowSize - 1)].z;
+            skyMesh.geometry.vertices[i].z = skyMeshCopy.geometry.vertices[i + (rowSize - 1)].z;
+        }
+    }
+
+    //sidescroll
+    skyMesh.position.x = skyMesh.position.x - speed;
+    skyMeshCopy.position.x = skyMeshCopy.position.x - speed;
+
+    //snap back after sidescroll
+    if(skyMesh.position.x < skyMeshPositionX - window.innerWidth){
+        skyMesh.position.x = skyMeshPositionX;
+        skyMeshCopy.position.x = skyMeshCopyPositionX;
+    }
+
+    skyMesh.geometry.computeFaceNormals();
+};
+
+module.exports = Sky;
+
+},{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Water.js":[function(require,module,exports){
 var Util = require('../util/Util');
 var scene, waterMesh, waterMeshPositionX, waterMeshCopy, waterMeshCopyPositionX, noise = [], verticesWidth;
 
@@ -790,7 +877,7 @@ function addNoise(){
 // }
 
 
-Water.prototype.update = function(time){
+Water.prototype.update = function(time, speed){
 	for (var i = 0, l = waterMesh.geometry.vertices.length; i < l; i++){
 		//calc noise
 		var noiseRange = 20;
@@ -814,8 +901,8 @@ Water.prototype.update = function(time){
 	}
 
 	//sidescroll
-	waterMesh.position.x = waterMesh.position.x - 1;
-	waterMeshCopy.position.x = waterMeshCopy.position.x - 1;
+	waterMesh.position.x = waterMesh.position.x - speed;
+	waterMeshCopy.position.x = waterMeshCopy.position.x - speed;
 
 	//snap back after sidescroll
 	if(waterMesh.position.x < waterMeshPositionX - window.innerWidth){

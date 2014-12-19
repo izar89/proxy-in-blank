@@ -74,7 +74,7 @@ function currentTrackHandler(track) {
 
 	var audio = document.querySelector('#track');
 	audio.setAttribute('src', track.stream_url +'?client_id=bd3361bf40be90ef0b5bdf94c008674c');
-	audio.play(track.position);
+	audio.play();
 }
 
 module.exports = SoundCloud;
