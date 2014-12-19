@@ -5,6 +5,7 @@ var io = require('socket.io')(server);
 var _ = require('underscore');
 var Client = require('./classes/Client.js');
 var sounds = require('./_js/data/sounds').sounds;
+var Util = require('./_js/modules/util/Util');
 
 /** CONFIG **/
 require("./config/middleware.js")(app, express);
@@ -17,18 +18,11 @@ var bounds = {
     border: 40
 };
 
-function randomPosition(bounds) {
-    return {
-        x: Math.round(Math.random() * (bounds.width - (bounds.border * 2))),
-        y: bounds.border + Math.round(Math.random() * (bounds.height - (bounds.border * 2)))
-    };
-}
-
 setInterval(function() {
     var trigger = {
     	timestamp: Date.now(),
         sound: _.sample(sounds),
-        position: randomPosition(bounds)
+        position: Util.randomPosition(bounds)
     };
     io.emit('add_trigger', trigger);
 }, 1200);
@@ -46,6 +40,7 @@ io.on('connection', function(socket) {
 
     var client = new Client(max_id + 1, socket.id);
     clients.push(client);
+    socket.emit('self', client);
 
     _.each(clients, function(c) {
         if (c !== client) {

@@ -37,7 +37,6 @@
     function update(){
         stats.update();
         scene.update(); //threejs scene
-        companions.update();
         triggers.update();
 
         requestAnimationFrame(update);
@@ -48,7 +47,7 @@
     }
 
     function _resizeCanvas() {
-        companions.resizeCanvas(window.innerWidth, window.innerHeight);
+        // resize shizzlewizzle
     }
 
     init();
@@ -56,7 +55,7 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/webgl/Scene.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports=module.exports={
+module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -233,7 +232,7 @@ function _initSettings() {
 		border: 40
 	};
 
-	svg = document.querySelector('svg');
+	svg = document.querySelector('#triggers');
 	triggers = [];
 
 	var context = new AudioContext();
@@ -263,7 +262,7 @@ function _addTrigger(t) {
 	triggers.push(trigger);
 
 	var duration = max_duration + t.sound.id / sounds.length * (min_duration - max_duration);
-	var player = trigger.moveTrigger(duration);
+	var player = trigger.move(duration);
 
 	player.onfinish = function() {
 		svg.removeChild(trigger.element);
@@ -299,54 +298,36 @@ Triggers.prototype.update = function() {
 };
 
 module.exports = Triggers;
-},{"../../data/sounds":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/data/sounds.json","../svg/Trigger":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/svg/Trigger.js","../util/Util":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/util/Util.js","./BufferLoader":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/audio/BufferLoader.js","./Player":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/audio/Player.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/companions/Companion.js":[function(require,module,exports){
-function Companion(client) {
-	var companion = new createjs.Shape();
-	companion.graphics.f('#e39c8d').dc(0, 0, 20);
-	companion.x = client.x;
-	companion.y = client.y;
-	if(client.id !== false) {
-		companion.clientid = client.id;
-	}
-	companion.trail = [];
-	return companion;
-}
+},{"../../data/sounds":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/data/sounds.json","../svg/Trigger":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/svg/Trigger.js","../util/Util":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/util/Util.js","./BufferLoader":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/audio/BufferLoader.js","./Player":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/audio/Player.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/companions/Companions.js":[function(require,module,exports){
+var Companion = require('../svg/Companion');
 
-module.exports = Companion;
-},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/companions/Companions.js":[function(require,module,exports){
-var Companion = require('./Companion');
-
-var companions, stage, self, socket;
+var companions, svg, self, socket;
 
 function Companions() {
 	_initSettings();
-	_initCanvas();
-	_createSelf();
 	_initSocket();
 }
 
 function _initSettings() {
+	svg = document.querySelector('#companions');
 	companions = [];
 }
 
-function _initCanvas() {
-	var canvas = document.createElement('canvas');
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	document.querySelector('.container').appendChild(canvas);
-
-	stage = new createjs.Stage(canvas);
+function _initSocket() {
+	socket = io('/');
+	socket.addEventListener('self', _createSelf);
+	socket.addEventListener('add_companion', _addCompanion);
+	socket.addEventListener('move_companion', _moveCompanion);
+	socket.addEventListener('remove_companion', _removeCompanion);
 }
 
-function _createSelf() {
-	self = new createjs.Shape();
-	self.graphics.f('#E34B2A').dc(0, 0, 20);
-	self.trail = [];
-	stage.addChild(self);
+function _createSelf(client) {
+	self = new Companion(client);
+	svg.appendChild(self.element);
 }
 
 function _addTrail(object) {
-	var trail = new createjs.Shape();
+	/*var trail = new createjs.Shape();
 
 	if (typeof object.xpast !== "undefined" || typeof object.ypast !== "undefined") {
 		trail.graphics.s("#E34B2A").ss(1, "round").quadraticCurveTo(object.xpast, object.ypast, object.x, object.y);
@@ -373,67 +354,68 @@ function _addTrail(object) {
 	object.xpast = object.x;
 	object.ypast = object.y;
 
-	stage.addChildAt(trail, 0);
+	stage.addChildAt(trail, 0);*/
 }
 
 function _removeTrail(trail) {
+	/*
 	for (var i = 0; i < trail.length; i++) {
 		stage.removeChild(trail[i]);
-	}
+	}*/
 }
 
 Companions.prototype.moveSelf = function(e) {
-	self.x = e.pageX;
-	self.y = e.pageY;
-	socket.emit('update_position', {
-		x: self.x,
-		y: self.y
-	});
-	_addTrail(self);
+	if(self) {
+		self.move({x: e.pageX, y: e.pageY});
+		socket.emit('update_position', {
+			x: self.position.x,
+			y: self.position.y
+		});
+
+		//_moveTrail(self);
+	}
 };
 
-function _initSocket() {
-	socket = io('/');
-	socket.addEventListener('add_companion', _addCompanion);
-	socket.addEventListener('move_companion', _moveCompanion);
-	socket.addEventListener('remove_companion', _removeCompanion);
+function _moveTrail(companion) {
+	/*companion.movement++;
+	if(companion.movement >= 20) {
+		companion.trailCoords.push({x: companion.position.x, y: companion.position.y});
+		companion.movement = 0;
+	}
+
+	if(companion.trailCoords.length > 4) {
+		companion.trailCoords.shift();
+	}
+
+	companion.updateTrail({x: companion.position.x, y: companion.position.y});*/
 }
 
 function _addCompanion(client) {
 	var companion = new Companion(client);
 	companions.push(companion);
-	stage.addChild(companion);
+	svg.appendChild(companion.element);
+	//svg.appendChild(companion.trail);
 }
 
 function _moveCompanion(client) {
 	var companion = _.findWhere(companions, {
 		'clientid': client.id
 	});
-	companion.x = client.x;
-	companion.y = client.y;
-	_addTrail(companion);
+	companion.move({x: client.x, y: client.y});
+	//_addTrail(companion);
 }
 
 function _removeCompanion(client) {
 	var companion = _.findWhere(companions, {
 		'clientid': client.id
 	});
-	stage.removeChild(companion);
-	_removeTrail(companion.trail);
+	svg.removeChild(companion.element);
+	//_removeTrail(companion.element.trail);
 	companions = _.reject(companions, companion);
 }
 
-Companions.prototype.update = function() {
-	stage.update();
-};
-
-Companions.prototype.resizeCanvas = function(width, height) {
-	stage.canvas.width = width;
-	stage.canvas.height = height;
-};
-
 module.exports = Companions;
-},{"./Companion":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/companions/Companion.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/soundcloud/SoundCloud.js":[function(require,module,exports){
+},{"../svg/Companion":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/svg/Companion.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/soundcloud/SoundCloud.js":[function(require,module,exports){
 /* globals SC */
 
 function SoundCloud(){
@@ -470,7 +452,74 @@ function searchSong(value){
 
 module.exports = SoundCloud;
 
-},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/svg/SVGHelper.js":[function(require,module,exports){
+},{}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/svg/Companion.js":[function(require,module,exports){
+/* globals d3 */
+
+var SVGHelper = require('./SVGHelper');
+var line;
+
+function Companion(client) {
+    this.position = {
+        x: client.x,
+        y: client.y
+    } || {
+        x: 0,
+        y: 0
+    };
+    this.stroke = 8;
+    this.radius = 16;
+    this.color = client.color;
+    this.movement = 0;
+    if (client.id !== false) {
+        this.clientid = client.id;
+    }
+    this.trailCoords = [];
+    this.positionPrev = this.position;
+
+    _create.call(this);
+    //_createTrail.call(this);
+}
+
+function _create() {
+    this.element = SVGHelper.createElement('circle');
+    this.element.setAttribute('cx', this.position.x);
+    this.element.setAttribute('cy', this.position.y);
+    this.element.setAttribute('r', this.radius);
+    this.element.setAttribute('fill', 'none');
+    this.element.setAttribute('stroke', this.color);
+    this.element.setAttribute('stroke-width', this.stroke);
+}
+
+Companion.prototype.move = function(position) {
+    this.position = position;
+    this.element.setAttribute('cx', this.position.x);
+    this.element.setAttribute('cy', this.position.y);
+};
+
+/*function _createTrail(svgRef) {
+    line = d3.svg.line().interpolate("basis").x(function(d, i) {
+        return d[0];
+    }).y(function(d, i) {
+        return d[1];
+    });
+
+    this.trail = this.element.append("g")
+        .append("path")
+        .data([this.trailCoords])
+        .attr("class", "line")
+        .attr("d", line);
+}
+
+Companion.prototype.updateTrail = function(pt) {
+    this.trailCoords.push(pt);
+
+    this.trail.attr("d", function(d) {
+        return line(d);
+    });
+};*/
+
+module.exports = Companion;
+},{"./SVGHelper":"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/svg/SVGHelper.js"}],"/Users/S/Documents/devine3/rmdIII/eindopdracht/proxy-in-blank/_js/modules/svg/SVGHelper.js":[function(require,module,exports){
 var namespace = "http://www.w3.org/2000/svg";
 
 function SVGHelper(){
@@ -512,7 +561,7 @@ Trigger.prototype.play = function() {
 	console.log('jow, playplay');
 };
 
-Trigger.prototype.moveTrigger = function(duration) {
+Trigger.prototype.move = function(duration) {
     var player = this.element.animate([{
         transform: 'translateX(' + (this.position.x + window.innerWidth )+ 'px)'
     }, {
