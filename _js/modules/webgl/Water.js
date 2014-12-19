@@ -49,7 +49,7 @@ function addNoise(){
 // }
 
 
-Water.prototype.update = function(time){
+Water.prototype.update = function(time, speed){
 	for (var i = 0, l = waterMesh.geometry.vertices.length; i < l; i++){
 		//calc noise
 		var noiseRange = 20;
@@ -73,8 +73,8 @@ Water.prototype.update = function(time){
 	}
 
 	//sidescroll
-	waterMesh.position.x = waterMesh.position.x - 1;
-	waterMeshCopy.position.x = waterMeshCopy.position.x - 1;
+	waterMesh.position.x = waterMesh.position.x - speed;
+	waterMeshCopy.position.x = waterMeshCopy.position.x - speed;
 
 	//snap back after sidescroll
 	if(waterMesh.position.x < waterMeshPositionX - window.innerWidth){
