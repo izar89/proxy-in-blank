@@ -65,16 +65,19 @@ function selectTrackHandler(e) {
 }
 
 function currentTrackHandler(track) {
-	var thumb = document.querySelector('#song .thumb');
-	var title = document.querySelector('#song .title');
-	var artist = document.querySelector('#song .artist');
-	thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
-	title.innerHTML = track.title;
-	artist.innerHTML = track.artist;
+	if(track.stream_url) {
+		var thumb = document.querySelector('#song .thumb');
+		var title = document.querySelector('#song .title');
+		var artist = document.querySelector('#song .artist');
+		thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
+		title.innerHTML = track.title;
+		artist.innerHTML = track.artist;
 
-	var audio = document.querySelector('#track');
-	audio.setAttribute('src', track.stream_url +'?client_id=bd3361bf40be90ef0b5bdf94c008674c');
-	audio.play();
+		var audio = document.querySelector('#track');
+		audio.setAttribute('src', track.stream_url +'?client_id=bd3361bf40be90ef0b5bdf94c008674c');
+		audio.currentTime = track.position;
+		audio.play();
+	}
 }
 
 module.exports = SoundCloud;

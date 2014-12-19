@@ -36,6 +36,7 @@ if(playlist.length > 0) {
 
 function setCurrentTrack() {
     currentTrack = playlist[0];
+    io.emit('currentTrack', currentTrack);
 }
 
 setInterval(function() {
@@ -46,7 +47,6 @@ setInterval(function() {
             playlist.shift();
             if(playlist.length > 0) {
                 setCurrentTrack();
-                io.emit('currentTrack', currentTrack);
             } else {
                 io.emit('currentTrack', {});
             }

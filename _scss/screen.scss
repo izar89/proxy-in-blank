@@ -114,6 +114,7 @@ svg {
 			font-weight: bold;
 			font-size: 16px;
 			letter-spacing: 6px;
+			margin-top: 6px;
 		}
 
 		.artist {
@@ -131,5 +132,47 @@ svg {
 
 	&:hover {
 		opacity: 1;
+	}
+}
+
+#modal {
+	position: absolute;
+	width: 50%;
+	height: 50%;
+	background-color: rgba(0,0,0,.5);
+	z-index: 100;
+	padding: 30px;
+	color: #FFF;
+	margin: -12.5% 0 0 -25%;
+	top: 50%;
+	left: 50%;
+
+	h1 {
+		font-size: 25px;
+		text-transform: uppercase;
+		letter-spacing: 6px;
+	}
+
+	p {
+		font-size: 14px;
+		margin-top: 20px;
+	}
+
+	a {
+		text-decoration: none;
+		background-color: #323440;
+		padding: 14px 0;
+		width: 100%;
+		text-align: center;
+		color: #ffcc8a;
+		line-height: 140%;
+		display: block;
+		margin-top: 20px;
+		font-size: 14px;
+
+		&:hover {
+			background-color: #ffcc8a;
+			color: #323440;
+		}
 	}
 }

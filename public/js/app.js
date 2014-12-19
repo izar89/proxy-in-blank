@@ -19,7 +19,18 @@
         document.addEventListener('mousemove', _triggerMovement);
         window.addEventListener('resize', _resizeCanvas, false);
 
+        document.querySelector('#modal').addEventListener('click', modalHandler);
+
         update();
+    }
+
+    function modalHandler(e) {
+        e.preventDefault();
+        var modal = document.querySelector('#modal');
+        var player = modal.animate([{opacity: 1}, {opacity: 0}], 500);
+        player.onfinish = function() {
+            modal.parentNode.removeChild(modal);
+        }
     }
 
     function initStats(){
@@ -55,7 +66,7 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -428,16 +439,19 @@ function selectTrackHandler(e) {
 }
 
 function currentTrackHandler(track) {
-	var thumb = document.querySelector('#song .thumb');
-	var title = document.querySelector('#song .title');
-	var artist = document.querySelector('#song .artist');
-	thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
-	title.innerHTML = track.title;
-	artist.innerHTML = track.artist;
+	if(track.stream_url) {
+		var thumb = document.querySelector('#song .thumb');
+		var title = document.querySelector('#song .title');
+		var artist = document.querySelector('#song .artist');
+		thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
+		title.innerHTML = track.title;
+		artist.innerHTML = track.artist;
 
-	var audio = document.querySelector('#track');
-	audio.setAttribute('src', track.stream_url +'?client_id=bd3361bf40be90ef0b5bdf94c008674c');
-	audio.play();
+		var audio = document.querySelector('#track');
+		audio.setAttribute('src', track.stream_url +'?client_id=bd3361bf40be90ef0b5bdf94c008674c');
+		audio.currentTime = track.position;
+		audio.play();
+	}
 }
 
 module.exports = SoundCloud;

@@ -18,7 +18,18 @@
         document.addEventListener('mousemove', _triggerMovement);
         window.addEventListener('resize', _resizeCanvas, false);
 
+        document.querySelector('#modal').addEventListener('click', modalHandler);
+
         update();
+    }
+
+    function modalHandler(e) {
+        e.preventDefault();
+        var modal = document.querySelector('#modal');
+        var player = modal.animate([{opacity: 1}, {opacity: 0}], 500);
+        player.onfinish = function() {
+            modal.parentNode.removeChild(modal);
+        }
     }
 
     function initStats(){
