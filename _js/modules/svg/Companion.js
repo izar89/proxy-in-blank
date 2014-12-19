@@ -1,7 +1,4 @@
-/* globals d3 */
-
 var SVGHelper = require('./SVGHelper');
-var line;
 
 function Companion(client) {
     this.position = {
@@ -22,7 +19,6 @@ function Companion(client) {
     this.positionPrev = this.position;
 
     _create.call(this);
-    //_createTrail.call(this);
 }
 
 function _create() {
@@ -40,27 +36,5 @@ Companion.prototype.move = function(position) {
     this.element.setAttribute('cx', this.position.x);
     this.element.setAttribute('cy', this.position.y);
 };
-
-/*function _createTrail(svgRef) {
-    line = d3.svg.line().interpolate("basis").x(function(d, i) {
-        return d[0];
-    }).y(function(d, i) {
-        return d[1];
-    });
-
-    this.trail = this.element.append("g")
-        .append("path")
-        .data([this.trailCoords])
-        .attr("class", "line")
-        .attr("d", line);
-}
-
-Companion.prototype.updateTrail = function(pt) {
-    this.trailCoords.push(pt);
-
-    this.trail.attr("d", function(d) {
-        return line(d);
-    });
-};*/
 
 module.exports = Companion;

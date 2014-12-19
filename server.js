@@ -13,8 +13,8 @@ require("./config/middleware.js")(app, express);
 
 var port = process.env.PORT;
 var clients = [];
-var tracks = [];
-var currentTrack = {};
+var playlist = [];
+var currentTrack = {position: 0};
 var bounds = {
     width: 200,
     height: 800,
@@ -30,8 +30,29 @@ setInterval(function() {
     io.emit('add_trigger', trigger);
 }, 1200);
 
+if(playlist.length > 0) {
+    setCurrentTrack();
+}
+
+function setCurrentTrack() {
+    currentTrack = playlist[0];
+}
+
 setInterval(function() {
-    currentTrack.position++;
+    if(currentTrack.title) {
+        currentTrack.position++;
+
+        if(currentTrack.position >= currentTrack.duration) {
+            playlist.shift();
+            if(playlist.length > 0) {
+                setCurrentTrack();
+                io.emit('currentTrack', currentTrack);
+            } else {
+                io.emit('currentTrack', {});
+            }
+            currentTrack = {position: 0};
+        }
+    }
 }, 1000);
 
 io.on('connection', function(socket) {
@@ -78,10 +99,9 @@ io.on('connection', function(socket) {
     });
 
     socket.on('selected_track', function(track) {
-        if(client.track.length === 0) {
-            var t = new Track(track);
-            tracks.push(t);
-        }
+        var t = new Track(track);
+        playlist.push(t);
+        setCurrentTrack();
     });
 
     socket.on('disconnect', function() {

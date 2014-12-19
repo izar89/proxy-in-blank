@@ -55,7 +55,7 @@
 })();
 
 },{"./modules/audio/Triggers":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/audio/Triggers.js","./modules/companions/Companions":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/companions/Companions.js","./modules/soundcloud/SoundCloud":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/soundcloud/SoundCloud.js","./modules/util/requestAnimationFrame":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/util/requestAnimationFrame.js","./modules/webgl/Scene":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/webgl/Scene.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/data/sounds.json":[function(require,module,exports){
-module.exports=module.exports={
+module.exports=module.exports=module.exports=module.exports=module.exports=module.exports=module.exports={
     "sounds": [{
         "id": 1,
         "file": "sounds/1.mp3"
@@ -328,44 +328,6 @@ function _createSelf(client) {
 	svg.appendChild(self.element);
 }
 
-function _addTrail(object) {
-	/*var trail = new createjs.Shape();
-
-	if (typeof object.xpast !== "undefined" || typeof object.ypast !== "undefined") {
-		trail.graphics.s("#E34B2A").ss(1, "round").quadraticCurveTo(object.xpast, object.ypast, object.x, object.y);
-		setInterval(function() {
-			trail.alpha -= 0.05;
-			if(trail.alpha < 0) {
-				stage.removeChild(trail);
-				object.xpast = object.x;
-				object.ypast = object.y;
-			}
-		}, 100);
-		object.trail.push(trail);
-		stage.addChild(trail);
-	}
-
-	if (object.trail.length > 15) {
-		stage.removeChild(object.trail.shift());
-	}
-
-	for (var i = 0; i < object.trail.length; i++) {
-		object.trail[i].alpha = (i / 100) * 15;
-	}
-
-	object.xpast = object.x;
-	object.ypast = object.y;
-
-	stage.addChildAt(trail, 0);*/
-}
-
-function _removeTrail(trail) {
-	/*
-	for (var i = 0; i < trail.length; i++) {
-		stage.removeChild(trail[i]);
-	}*/
-}
-
 Companions.prototype.moveSelf = function(e) {
 	if(self) {
 		self.move({x: e.pageX, y: e.pageY});
@@ -373,30 +335,13 @@ Companions.prototype.moveSelf = function(e) {
 			x: self.position.x,
 			y: self.position.y
 		});
-
-		//_moveTrail(self);
 	}
 };
-
-function _moveTrail(companion) {
-	/*companion.movement++;
-	if(companion.movement >= 20) {
-		companion.trailCoords.push({x: companion.position.x, y: companion.position.y});
-		companion.movement = 0;
-	}
-
-	if(companion.trailCoords.length > 4) {
-		companion.trailCoords.shift();
-	}
-
-	companion.updateTrail({x: companion.position.x, y: companion.position.y});*/
-}
 
 function _addCompanion(client) {
 	var companion = new Companion(client);
 	companions.push(companion);
 	svg.appendChild(companion.element);
-	//svg.appendChild(companion.trail);
 }
 
 function _moveCompanion(client) {
@@ -404,7 +349,6 @@ function _moveCompanion(client) {
 		'clientid': client.id
 	});
 	companion.move({x: client.x, y: client.y});
-	//_addTrail(companion);
 }
 
 function _removeCompanion(client) {
@@ -412,7 +356,6 @@ function _removeCompanion(client) {
 		'clientid': client.id
 	});
 	svg.removeChild(companion.element);
-	//_removeTrail(companion.element.trail);
 	companions = _.reject(companions, companion);
 }
 
@@ -425,7 +368,6 @@ var result, currentTracks, socket;
 function SoundCloud() {
 	initClient();
 	initSocket();
-	initSoundbar();
 }
 
 function initClient() {
@@ -437,6 +379,8 @@ function initClient() {
 
 function initSocket() {
 	socket = io('/');
+	initSoundbar();
+	socket.addEventListener('currentTrack', currentTrackHandler, false);
 }
 
 function initSoundbar() {
@@ -479,17 +423,26 @@ function showTracks(tracks) {
 }
 
 function selectTrackHandler(e) {
-	console.log(e.currentTarget.getAttribute('data-id'));
 	var curTrack = currentTracks[e.currentTarget.getAttribute('data-id')];
 	socket.emit('selected_track', curTrack);
 }
 
+function currentTrackHandler(track) {
+	var thumb = document.querySelector('#song .thumb');
+	var title = document.querySelector('#song .title');
+	var artist = document.querySelector('#song .artist');
+	thumb.innerHTML = '<img src="'+ track.thumb +'" alt="thumb" />';
+	title.innerHTML = track.title;
+	artist.innerHTML = track.artist;
+
+	var audio = document.querySelector('#track');
+	audio.setAttribute('src', track.stream_url +'?client_id=bd3361bf40be90ef0b5bdf94c008674c');
+	audio.play(track.position);
+}
+
 module.exports = SoundCloud;
 },{}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/Companion.js":[function(require,module,exports){
-/* globals d3 */
-
 var SVGHelper = require('./SVGHelper');
-var line;
 
 function Companion(client) {
     this.position = {
@@ -510,7 +463,6 @@ function Companion(client) {
     this.positionPrev = this.position;
 
     _create.call(this);
-    //_createTrail.call(this);
 }
 
 function _create() {
@@ -528,28 +480,6 @@ Companion.prototype.move = function(position) {
     this.element.setAttribute('cx', this.position.x);
     this.element.setAttribute('cy', this.position.y);
 };
-
-/*function _createTrail(svgRef) {
-    line = d3.svg.line().interpolate("basis").x(function(d, i) {
-        return d[0];
-    }).y(function(d, i) {
-        return d[1];
-    });
-
-    this.trail = this.element.append("g")
-        .append("path")
-        .data([this.trailCoords])
-        .attr("class", "line")
-        .attr("d", line);
-}
-
-Companion.prototype.updateTrail = function(pt) {
-    this.trailCoords.push(pt);
-
-    this.trail.attr("d", function(d) {
-        return line(d);
-    });
-};*/
 
 module.exports = Companion;
 },{"./SVGHelper":"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js"}],"/Users/Jasper/Dropbox/School/Semester 5/RMDIII/PROXY-IN-BLANK/_js/modules/svg/SVGHelper.js":[function(require,module,exports){
