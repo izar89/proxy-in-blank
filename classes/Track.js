@@ -3,7 +3,7 @@ function Track(track) {
 	this.artist = track.user.username;
 	this.thumb = track.artwork_url;
 	this.stream_url = track.stream_url;
-	this.duration = Math.round(track.duration / 3600);
+	this.duration = Math.round(track.duration / 1000);
 	this.position = 0;
 }
 

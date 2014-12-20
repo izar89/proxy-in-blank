@@ -6,7 +6,7 @@
     var Triggers = require('./modules/audio/Triggers');
     var SoundCloud = require('./modules/soundcloud/SoundCloud');
 
-    var stats, scene, companions, triggers, soundcloud;
+    var scene, companions, triggers, soundcloud;
 
     function init(){
         scene = new Scene();
@@ -15,8 +15,6 @@
         soundcloud = new SoundCloud();
 
         document.addEventListener('mousemove', _triggerMovement);
-        window.addEventListener('resize', _resizeCanvas, false);
-
         document.querySelector('#modal').addEventListener('click', modalHandler);
 
         update();
@@ -32,7 +30,7 @@
     }
 
     function update(){
-        scene.update(); //threejs scene
+        scene.update();
         triggers.update();
 
         requestAnimationFrame(update);
@@ -40,11 +38,6 @@
 
     function _triggerMovement(e) {
         companions.moveSelf(e);
-    }
-
-    function _resizeCanvas() {
-        // resize shizzlewizzle
-        console.log("resize");
     }
 
     init();
