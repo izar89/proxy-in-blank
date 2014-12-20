@@ -420,7 +420,7 @@ function selectTrackHandler(e) {
 }
 
 function currentTrackHandler(track) {
-	if(currentTrack.title !== track.title) {
+	if(currentTrack && currentTrack.title !== track.title) {
 		if(track.stream_url) {
 			currentTrack = track;
 			var thumb = document.querySelector('#song .thumb');
