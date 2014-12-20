@@ -29,8 +29,10 @@ function initSoundbar() {
 }
 
 function keyUpHandler(e) {
-	if (e.keyCode === 13 || this.value.length >= 3) {
+	if (this.value.length >= 3) {
 		searchSong(this.value);
+	} else {
+		result.innerHTML = '';
 	}
 }
 
@@ -66,8 +68,6 @@ function selectTrackHandler(e) {
 }
 
 function currentTrackHandler(track) {
-	console.log('TRAAAKAKAKAKAKAAKKAKAKAAK');
-	console.log(track);
 	if(track.stream_url) {
 		var thumb = document.querySelector('#song .thumb');
 		var title = document.querySelector('#song .title');
